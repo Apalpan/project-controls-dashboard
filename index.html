@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Dashboard demostrativo de Project Controls, Valor Ganado y BIM/VDC.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2216%22 fill=%22%2318304f%22/><path d=%22M18 44V20h7l14 14V20h7v24h-7L25 30v14z%22 fill=%22white%22/></svg>">
-  <title>NEXUS Control · Project Controls</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2216%22 fill=%22%2318304f%22/><text x=%2232%22 y=%2239%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2224%22 font-weight=%22700%22 fill=%22white%22>G+</text></svg>">
+  <title>GEN+ · Project Controls Intelligence</title>
   <script>
     (()=>{const t=localStorage.getItem("pc-theme")||"light";document.documentElement.dataset.theme=t;})();
   </script>
@@ -13,7 +13,7 @@
     :root{
       color-scheme:light;
       --hue:250;--chroma:.07;
-      --brand:#18304f;--brand-2:#284c78;--accent:#235ea7;--accent-soft:#eaf2fc;
+      --brand:#18304f;--brand-2:#284c78;--accent:#235ea7;--accent-soft:#eaf2fc;--cta:#ee6c2f;--cta-hover:#f47d43;--cta-soft:#fff0e8;
       --bg:#f3f6fa;--surface:#fff;--surface-2:#f8fafc;--text:#122034;--muted:#617085;
       --line:#dbe3ed;--ok:#14866d;--ok-soft:#e6f6f1;--warn:#b87509;--warn-soft:#fff4d9;
       --bad:#c24148;--bad-soft:#fdebed;--info:#2868b7;--shadow:0 12px 34px rgba(25,48,79,.08);
@@ -21,7 +21,7 @@
     }
     html[data-theme="dark"]{
       color-scheme:dark;--brand:#dce9f8;--brand-2:#91b4df;--accent:#69a9f5;--accent-soft:#173050;
-      --bg:#0b1320;--surface:#111c2b;--surface-2:#162334;--text:#eef5fc;--muted:#a5b4c7;
+      --bg:#0b1320;--surface:#111c2b;--surface-2:#162334;--text:#eef5fc;--muted:#a5b4c7;--cta:#ff7b3d;--cta-hover:#ff915d;--cta-soft:#3b241c;
       --line:#27384d;--ok:#56c9aa;--ok-soft:#12372f;--warn:#f2bd55;--warn-soft:#3b2d13;
       --bad:#ff858b;--bad-soft:#421d25;--info:#7ab4f8;--shadow:0 18px 40px rgba(0,0,0,.28)
     }
@@ -36,7 +36,7 @@
     .topbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--surface) 94%,transparent);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
     .topbar-inner{max-width:1560px;margin:auto;padding:12px 24px;display:flex;align-items:center;gap:18px}
     .brand{display:flex;align-items:center;gap:11px;min-width:220px}
-    .brand-mark{width:36px;height:36px;border-radius:11px;background:var(--brand);color:var(--surface);display:grid;place-items:center;font-weight:800;letter-spacing:-.05em}
+    .brand-mark{width:36px;height:36px;border-radius:11px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;letter-spacing:-.05em}
     [data-theme="dark"] .brand-mark{background:var(--accent);color:#07111e}
     .brand strong{display:block;font-size:14px;letter-spacing:.04em}
     .brand small{display:block;color:var(--muted);font-size:11px}
@@ -44,10 +44,12 @@
     .nav button{border:0;background:transparent;padding:0 14px;border-radius:10px;color:var(--muted);white-space:nowrap;font-weight:650;cursor:pointer}
     .nav button:hover,.nav button.active{background:var(--accent-soft);color:var(--accent)}
     .top-actions{margin-left:auto;display:flex;gap:8px}
-    .icon-btn,.primary-btn,.ghost-btn{border:1px solid var(--line);background:var(--surface);border-radius:11px;padding:0 13px;cursor:pointer;font-weight:650}
+    .icon-btn,.primary-btn,.ghost-btn,.cta-btn{border:1px solid var(--line);background:var(--surface);border-radius:11px;padding:0 13px;cursor:pointer;font-weight:650}
     .icon-btn{width:44px;padding:0;font-size:18px}
     .primary-btn{border-color:var(--accent);background:var(--accent);color:#fff}
     .primary-btn:hover{filter:brightness(1.06)}
+    .cta-btn{border-color:var(--cta);background:var(--cta);color:#fff;box-shadow:0 8px 20px color-mix(in srgb,var(--cta) 24%,transparent)}
+    .cta-btn:hover{background:var(--cta-hover);border-color:var(--cta-hover)}
     .ghost-btn:hover,.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
     .page{max-width:1560px;margin:auto;padding:24px}
     .hero{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:stretch;margin-bottom:18px}
@@ -72,6 +74,7 @@
     .signal{padding:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px}
     .signal small{color:var(--muted);display:block}.signal strong{font-size:18px;font-variant-numeric:tabular-nums}
     .demo-note{margin-top:14px;color:var(--muted);font-size:12px}
+    .hero-priority{margin-top:10px;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:var(--surface-2);display:flex;justify-content:space-between;align-items:center;gap:12px}.hero-priority strong{display:block;font-size:12px}.hero-priority span{color:var(--muted);font-size:11px}
     .filterbar{display:flex;align-items:end;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:18px}
     .filter{display:grid;gap:5px;min-width:160px}.filter label{font-size:11px;color:var(--muted);font-weight:750;text-transform:uppercase;letter-spacing:.07em}
     select,input{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:0 12px;min-height:44px;font-size:16px}
@@ -109,14 +112,30 @@
     dialog{border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--text);padding:0;width:min(620px,calc(100% - 28px));box-shadow:0 30px 90px rgba(0,0,0,.35)}dialog::backdrop{background:rgba(4,10,18,.55);backdrop-filter:blur(3px)}
     .dialog-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line)}.dialog-head h2{margin:0;font-size:18px}.dialog-body{padding:20px}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.form-field{display:grid;gap:5px}.form-field label{font-weight:700;font-size:12px}.form-field input{width:100%}.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
     .footer{max-width:1560px;margin:auto;padding:4px 24px 26px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:16px}
+    .copilot-overlay[hidden],.copilot-drawer[hidden]{display:none}.copilot-overlay{position:fixed;inset:0;z-index:70;background:rgba(4,10,18,.46);opacity:0;pointer-events:none;transition:opacity 180ms var(--ease)}
+    .copilot-overlay.open{opacity:1;pointer-events:auto}
+    .copilot-drawer{position:fixed;z-index:71;right:0;top:0;width:min(520px,100%);height:100dvh;background:var(--surface);border-left:1px solid var(--line);box-shadow:-24px 0 70px rgba(5,15,30,.22);transform:translateX(102%);transition:transform 240ms var(--ease);display:flex;flex-direction:column}
+    .copilot-drawer.open{transform:translateX(0)}
+    .copilot-head{padding:20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;align-items:flex-start;background:linear-gradient(145deg,var(--surface),var(--accent-soft))}
+    .copilot-brand{display:flex;gap:11px;align-items:flex-start}.ai-mark{width:38px;height:38px;border-radius:12px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:850}
+    .copilot-head h2{font-size:17px;margin:0}.copilot-head p{font-size:11px;color:var(--muted);margin:3px 0 0}
+    .copilot-body{padding:18px 20px 24px;overflow:auto;display:flex;flex-direction:column;gap:16px}
+    .copilot-intro{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2);color:var(--muted);font-size:12px}
+    .prompt-grid{display:flex;flex-wrap:wrap;gap:8px}.prompt-chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 11px;min-height:38px;cursor:pointer;text-align:left;color:var(--text);font-size:12px}.prompt-chip:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+    .copilot-form{display:grid;grid-template-columns:1fr auto;gap:8px}.copilot-form input{width:100%}
+    .copilot-answer{border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--surface-2);min-height:190px;flex:0 0 auto}
+    .copilot-answer.empty-answer{display:grid;place-items:center;text-align:center;color:var(--muted)}
+    .answer-block+.answer-block{border-top:1px solid var(--line);margin-top:13px;padding-top:13px}.answer-block h3{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 6px}.answer-block p{margin:0}.answer-block ul{margin:6px 0 0;padding-left:18px}
+    .evidence-list{display:flex;flex-wrap:wrap;gap:7px}.evidence-link{border:1px solid var(--line);background:var(--surface);border-radius:9px;min-height:38px;padding:7px 10px;cursor:pointer;color:var(--accent);font-weight:700;font-size:11px}
+    .copilot-actions{display:flex;gap:8px;flex-wrap:wrap}.copilot-actions[hidden]{display:none}.review-note{font-size:11px;color:var(--muted);margin:7px 0 0}.confidence{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:11px}
     .only-mobile{display:none}
     @media(max-width:1150px){.kpis{grid-template-columns:repeat(3,1fr)}.metric-grid{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}.nav{order:3;width:100%}.topbar-inner{flex-wrap:wrap}.top-actions{margin-left:auto}}
-    @media(max-width:720px){.page{padding:14px}.topbar-inner{padding:10px 14px}.brand{min-width:0}.brand small{display:none}.top-actions .primary-btn span{display:none}.hero-main,.hero-side{padding:20px}.hero-signal{grid-template-columns:1fr}.filterbar{align-items:stretch}.filter{min-width:calc(50% - 6px);flex:1}.filter-reset{margin-left:0}.kpis{grid-template-columns:repeat(2,1fr)}.grid-equal{grid-template-columns:1fr}.metric-grid{grid-template-columns:repeat(2,1fr)}.chart-wrap{height:290px}.form-grid{grid-template-columns:1fr}.footer{padding:4px 14px 22px;flex-direction:column}.only-mobile{display:inline}}
+    @media(max-width:720px){.page{padding:14px}.topbar-inner{padding:10px 14px}.brand{min-width:0}.brand small{display:none}.top-actions .primary-btn span,.top-actions .ghost-btn span{display:none}.top-actions .cta-btn{padding:0 10px}.top-actions .cta-btn span{display:inline}.nav:after{content:"›";position:sticky;right:0;display:grid;place-items:center;min-width:25px;background:linear-gradient(90deg,transparent,var(--surface) 55%);color:var(--accent);font-size:20px;pointer-events:none}.hero-main,.hero-side{padding:20px}.hero-signal{grid-template-columns:1fr}.hero-priority{align-items:flex-start}.filterbar{align-items:stretch}.filter{min-width:calc(50% - 6px);flex:1}.filter-reset{margin-left:0}.kpis{grid-template-columns:repeat(2,1fr)}.grid-equal{grid-template-columns:1fr}.metric-grid{grid-template-columns:repeat(2,1fr)}.chart-wrap{height:290px}.form-grid{grid-template-columns:1fr}.footer{padding:4px 14px 22px;flex-direction:column}.only-mobile{display:inline}.copilot-drawer{width:100%}.copilot-form{grid-template-columns:1fr}.copilot-form button{width:100%}}
     @media(max-width:410px){.kpis{grid-template-columns:1fr}.filter{min-width:100%}.hero-meta{display:grid}.metric-grid{grid-template-columns:1fr}.top-actions{gap:5px}.icon-btn{width:42px}}
     @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
     @media print{
       :root{--bg:#fff;--surface:#fff;--surface-2:#f7f8fa;--text:#111;--muted:#555;--line:#ccd2d8}
-      .topbar,.filterbar,.no-print,dialog{display:none!important}.page{max-width:none;padding:0}.view{display:block!important;break-before:page}.view:first-of-type{break-before:auto}.hero-main{background:#18304f!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.panel,.kpi,.hero-main,.hero-side{box-shadow:none;break-inside:avoid}.kpis{grid-template-columns:repeat(4,1fr)}.grid-2,.grid-equal{grid-template-columns:1fr}.chart-wrap{height:280px}.footer{max-width:none;padding:10px 0}
+      .topbar,.filterbar,.no-print,dialog,.copilot-overlay,.copilot-drawer{display:none!important}.page{max-width:none;padding:0}.view{display:block!important;break-before:page}.view:first-of-type{break-before:auto}.hero-main{background:#18304f!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.panel,.kpi,.hero-main,.hero-side{box-shadow:none;break-inside:avoid}.kpis{grid-template-columns:repeat(4,1fr)}.grid-2,.grid-equal{grid-template-columns:1fr}.chart-wrap{height:280px}.footer{max-width:none;padding:10px 0}
     }
   </style>
 </head>
@@ -124,18 +143,19 @@
 <div class="app">
   <header class="topbar">
     <div class="topbar-inner">
-      <div class="brand" aria-label="NEXUS Project Controls">
-        <div class="brand-mark">N+</div><div><strong>NEXUS CONTROL</strong><small>Project Controls · BIM/VDC</small></div>
+      <div class="brand" aria-label="GEN+ Project Controls Intelligence">
+        <div class="brand-mark">G+</div><div><strong>GEN+</strong><small>Project Controls Intelligence</small></div>
       </div>
       <nav class="nav" aria-label="Vistas principales">
-        <button class="active" data-view="summary">Resumen</button>
+        <button class="active" data-view="summary" aria-current="page">Resumen</button>
         <button data-view="costs">Costos</button>
         <button data-view="schedule">Cronograma</button>
         <button data-view="bim">BIM</button>
         <button data-view="risks">Riesgos</button>
       </nav>
       <div class="top-actions">
-        <button class="primary-btn" id="editBtn" aria-label="Editar datos del corte">✎ <span>Editar corte</span></button>
+        <button class="cta-btn" id="copilotBtn" aria-label="Consultar asistente IA GEN+">✦ <span>Copiloto IA</span></button>
+        <button class="ghost-btn" id="editBtn" aria-label="Editar datos del corte">✎ <span>Editar corte</span></button>
         <button class="icon-btn" id="printBtn" aria-label="Imprimir o exportar PDF" title="Imprimir / Exportar PDF">⤓</button>
         <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema" title="Cambiar tema">◐</button>
       </div>
@@ -166,6 +186,7 @@
           <div class="signal"><small>Avance financiero</small><strong id="financialTop">65.2%</strong></div>
           <div class="signal"><small>Forecast</small><strong id="forecastTop">$27.53 M</strong></div>
         </div>
+        <div class="hero-priority"><div><span>Acción prioritaria</span><strong>Cerrar compra y alternativa HVAC</strong></div><span>Diego Chávez · 48 h</span></div>
         <div class="demo-note">Datos demostrativos · EV ponderado por presupuesto · Actualización simulada</div>
       </aside>
     </section>
@@ -185,7 +206,7 @@
       <div class="section-head"><div><h2>Desempeño acumulado</h2><p>Curva S · PV, EV y AC en millones de USD</p></div></div>
       <div class="grid-2">
         <article class="panel">
-          <div class="panel-head"><div><h3>Curva S del proyecto</h3><p id="curveSubtitle">Punto de corte · día actual 180</p></div><span class="badge info">300 días</span></div>
+          <div class="panel-head"><div><h3>Curva S del proyecto</h3><p id="curveSubtitle">Corte simulado · día actual 180 · futuro diferenciado</p></div><span class="badge bad" id="curveInsight">AC supera EV en $1.50 M</span></div>
           <div class="chart-wrap"><canvas id="sCurve" aria-label="Gráfico de Curva S con PV EV y AC" role="img"></canvas><div class="chart-error" id="chartError">No fue posible cargar Chart.js. Verifica tu conexión y recarga la página.</div></div>
         </article>
         <aside class="panel">
@@ -227,7 +248,7 @@
       <div class="kpis" id="costKpis"></div>
       <div class="section-head"><div><h2>Desviación por disciplina</h2><p>EV frente a costo real acumulado</p></div></div>
       <div class="grid-2">
-        <article class="panel"><div class="chart-wrap"><canvas id="costChart" aria-label="Variación de costos por disciplina" role="img"></canvas></div></article>
+        <article class="panel"><div class="panel-head"><div><h3>Drivers de desviación</h3><p>CV divergente · ordenado por impacto</p></div><span class="badge bad" id="costDriverInsight">Estructuras · −$0.45 M</span></div><div class="chart-wrap"><canvas id="costChart" aria-label="Variación de costos por disciplina ordenada por impacto" role="img"></canvas></div></article>
         <article class="panel"><div class="panel-head"><div><h3>Lectura del forecast</h3><p>Escenario basado en desempeño CPI actual</p></div></div><div class="action-list" id="forecastList"></div></article>
       </div>
     </section>
@@ -253,7 +274,7 @@
       <div class="section-head"><div><h2>Interferencias prioritarias</h2><p>Severidad e impacto sobre frentes de trabajo</p></div></div>
       <div class="grid-2">
         <article class="panel"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Interferencia</th><th>Disciplinas</th><th>Severidad</th><th>Owner</th><th>Vence</th><th>Estado</th></tr></thead><tbody id="bimRows"></tbody></table></div></article>
-        <article class="panel"><div class="panel-head"><div><h3>Distribución de clashes</h3><p>Por severidad del issue</p></div></div><div class="chart-wrap"><canvas id="bimChart" aria-label="Clashes BIM por severidad" role="img"></canvas></div></article>
+        <article class="panel"><div class="panel-head"><div><h3>Clashes por severidad y estado</h3><p>Prioriza vencidos antes que volumen total</p></div><span class="badge bad">2 vencidos prioritarios</span></div><div class="chart-wrap"><canvas id="bimChart" aria-label="Clashes BIM por severidad y estado" role="img"></canvas></div></article>
       </div>
     </section>
 
@@ -266,8 +287,39 @@
     </section>
   </main>
 
-  <footer class="footer"><span>NEXUS Control v1.0 · Demo sin backend</span><span>Fuente: datos simulados coherentes · No sustituye el reporte contractual aprobado</span></footer>
+  <footer class="footer"><span>GEN+ Project Controls Intelligence · Demo sin backend</span><span>Fuente: datos simulados coherentes · No sustituye el reporte contractual aprobado</span></footer>
 </div>
+
+<div class="copilot-overlay" id="copilotOverlay" aria-hidden="true" hidden></div>
+<aside class="copilot-drawer" id="copilotDrawer" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="copilotTitle" inert hidden>
+  <div class="copilot-head">
+    <div class="copilot-brand"><div class="ai-mark">G+</div><div><h2 id="copilotTitle">Copiloto IA GEN+ · Project Controls</h2><p>Asistente IA experto · demo con datos simulados · motor local por reglas</p></div></div>
+    <button class="icon-btn" id="closeCopilot" aria-label="Cerrar copiloto">×</button>
+  </div>
+  <div class="copilot-body">
+    <div class="copilot-intro"><strong>Especialista en EVM, cronograma y BIM/VDC.</strong><br>Analiza únicamente el corte visible. Separa evidencia, impacto y acciones; no registra acuerdos ni inventa fuentes.</div>
+    <div>
+      <div class="eyebrow" style="color:var(--muted);margin-bottom:8px">Consultas sugeridas</div>
+      <div class="prompt-grid" id="promptGrid">
+        <button class="prompt-chip" data-prompt="¿Qué requiere decisión hoy?">¿Qué requiere decisión hoy?</button>
+        <button class="prompt-chip" data-prompt="Explícame el sobrecosto y su impacto al cierre.">Sobrecosto e impacto al cierre</button>
+        <button class="prompt-chip" data-prompt="¿Qué actividades están presionando el plazo?">Actividades que presionan el plazo</button>
+        <button class="prompt-chip" data-prompt="Prioriza riesgos e interferencias BIM para las próximas 48 horas.">Riesgos + BIM en 48 horas</button>
+        <button class="prompt-chip" data-prompt="¿Qué tendría que mejorar para recuperar el BAC?">¿Cómo recuperar el BAC?</button>
+      </div>
+    </div>
+    <form class="copilot-form" id="copilotForm">
+      <label for="copilotInput" style="position:absolute;clip:rect(0 0 0 0)">Consulta al Copiloto IA GEN+</label>
+      <input id="copilotInput" type="text" maxlength="180" placeholder="Pregunta por costo, plazo, riesgos o BIM…" autocomplete="off">
+      <button class="primary-btn" type="submit">Analizar</button>
+    </form>
+    <div class="copilot-answer empty-answer" id="copilotAnswer" aria-live="polite">Selecciona una consulta para generar un diagnóstico trazable del corte.</div>
+    <div class="copilot-actions" id="copilotActions" hidden>
+      <button class="ghost-btn" id="reviewBtn" type="button">☆ Marcar para revisión</button>
+    </div>
+    <p class="review-note">Las propuestas guardadas permanecen solo en este navegador y no constituyen acuerdos registrados.</p>
+  </div>
+</aside>
 
 <dialog id="editDialog" aria-labelledby="editTitle">
   <form id="editForm">
@@ -371,6 +423,17 @@
       ["VAC",money(m.vac),m.vac<0?"Déficit al cierre":"Ahorro previsto",varianceState(m.vac,m.bac)],["TCPI",m.tcpi.toFixed(3),"Eficiencia requerida al cierre",m.tcpi>1.1?"bad":m.tcpi>1?"warn":"ok"]
     ];
   };
+  const executiveKpis=()=>{
+    const m=evm(state.snapshot),critical=risks.filter(r=>r.p*r.i>=15).length;
+    return [
+      ["CPI",m.cpi.toFixed(3),m.cpi<1?"Ineficiencia de costo":"Costo eficiente",indexState(m.cpi)],
+      ["SPI",m.spi.toFixed(3),m.spi<1?"Ritmo bajo plan":"Ritmo conforme",indexState(m.spi)],
+      ["EAC",money(m.eac),`Forecast ${money(m.eac-m.bac)} vs BAC`,varianceState(m.vac,m.bac)],
+      ["VAC",money(m.vac),m.vac<0?"Déficit al cierre":"Ahorro previsto",varianceState(m.vac,m.bac)],
+      ["TCPI",m.tcpi.toFixed(3),"Eficiencia requerida restante",m.tcpi>1.1?"bad":m.tcpi>1?"warn":"ok"],
+      ["RIESGOS",String(critical),"Exposición crítica activa",critical>0?"bad":"ok"]
+    ];
+  };
   function renderKpis(target,data=kpiData()){
     $(target).innerHTML=data.map(([l,v,n,s])=>`<article class="kpi" data-state="${s}" title="${n}"><div class="kpi-top"><span class="kpi-label">${l}</span><i class="traffic"></i></div><div class="kpi-value">${v}</div><div class="kpi-note">${n}</div></article>`).join("");
   }
@@ -423,7 +486,11 @@
   }
   function renderExecutive(){
     const m=evm(state.snapshot),over=m.eac-m.bac,days=Math.round((1-m.spi)*state.snapshot.duration);
-    $("#executiveText").innerHTML=`El proyecto registra un <strong>avance físico de ${pct(m.physical)}</strong> frente a un avance ganado de ${pct(m.ev/m.bac*100)}. El <strong>SPI ${m.spi.toFixed(3)}</strong> confirma un retraso leve, equivalente a aproximadamente ${days} días de presión sobre el plan, mientras el <strong>CPI ${m.cpi.toFixed(3)}</strong> evidencia una desviación de costo material. Si la eficiencia actual continúa, el cierre se proyecta en <strong>${money(m.eac)}</strong>, ${money(over)} por encima del BAC. Para terminar dentro del presupuesto se requiere un TCPI de <strong>${m.tcpi.toFixed(3)}</strong>, exigente frente al desempeño actual. La prioridad es contener cambios, recuperar productividad de acabados y HVAC, y cerrar interferencias BIM críticas antes de liberar nuevos frentes. Estas acciones deben validarse con responsables y evidencia en el próximo corte.`;
+    const scheduleReading=m.spi<1?`confirma un retraso leve, equivalente a aproximadamente ${Math.max(0,days)} días de presión sobre el plan`:"muestra un ritmo conforme o adelantado frente al plan";
+    const costReading=m.cpi<1?"evidencia una desviación de costo material":"muestra una eficiencia de costo controlada";
+    const forecastReading=over>1000?`${money(over)} por encima del BAC`:over<-1000?`${money(Math.abs(over))} por debajo del BAC`:"en línea con el BAC";
+    const recoveryReading=m.tcpi>1.1?"exigente frente al desempeño actual":m.tcpi>1?"superior al desempeño objetivo":"compatible con el desempeño requerido";
+    $("#executiveText").innerHTML=`El proyecto registra un <strong>avance físico de ${pct(m.physical)}</strong> frente a un avance ganado de ${pct(m.ev/m.bac*100)}. El <strong>SPI ${m.spi.toFixed(3)}</strong> ${scheduleReading}, mientras el <strong>CPI ${m.cpi.toFixed(3)}</strong> ${costReading}. Si la eficiencia actual continúa, el cierre se proyecta en <strong>${money(m.eac)}</strong>, ${forecastReading}. El TCPI de <strong>${m.tcpi.toFixed(3)}</strong> es ${recoveryReading}. La prioridad es contener cambios, recuperar productividad de acabados y HVAC, y cerrar interferencias BIM críticas antes de liberar nuevos frentes. Estas acciones deben validarse con responsables y evidencia en el próximo corte.`;
   }
   function renderActions(){
     $("#actionList").innerHTML=actions.map((a,i)=>`<div class="action"><span class="action-num">${i+1}</span><div><p>${a[0]}</p><small>${a[1]}</small></div><span class="badge info">${a[2]}</span></div>`).join("");
@@ -453,19 +520,63 @@
     let idx=data.labels.indexOf(day);
     if(idx<0){idx=data.labels.findIndex(v=>v>day);if(idx<0)idx=data.labels.length;data.labels.splice(idx,0,day);data.pv.splice(idx,0,0);data.ev.splice(idx,0,0);data.ac.splice(idx,0,0)}
     data.pv[idx]=state.snapshot.pv/1e6;data.ev[idx]=state.snapshot.ev/1e6;data.ac[idx]=state.snapshot.ac/1e6;
+    const eac=evm(state.snapshot).eac/1e6;
+    data.forecast=data.labels.map((label,i)=>{
+      if(label<day)return null;
+      if(label===day)return state.snapshot.ac/1e6;
+      const span=Math.max(1,state.snapshot.duration-day);
+      return state.snapshot.ac/1e6+(eac-state.snapshot.ac/1e6)*((label-day)/span);
+    });
+    data.labels.forEach((label,i)=>{if(label>day){data.ev[i]=null;data.ac[i]=null}});
     return data;
   }
-  function themeColors(){const cs=getComputedStyle(document.documentElement);return{accent:cs.getPropertyValue("--accent").trim(),ok:cs.getPropertyValue("--ok").trim(),bad:cs.getPropertyValue("--bad").trim(),muted:cs.getPropertyValue("--muted").trim(),line:cs.getPropertyValue("--line").trim(),surface:cs.getPropertyValue("--surface").trim()}}
+  function themeColors(){const cs=getComputedStyle(document.documentElement);return{accent:cs.getPropertyValue("--accent").trim(),accentSoft:cs.getPropertyValue("--accent-soft").trim(),ok:cs.getPropertyValue("--ok").trim(),bad:cs.getPropertyValue("--bad").trim(),warn:cs.getPropertyValue("--warn").trim(),muted:cs.getPropertyValue("--muted").trim(),line:cs.getPropertyValue("--line").trim(),surface:cs.getPropertyValue("--surface").trim()}}
+  const cutoffZone={
+    id:"cutoffZone",
+    beforeDraw(chart,args,opts){
+      if(!opts||!opts.day||!chart.chartArea)return;
+      const idx=chart.data.labels.findIndex(v=>Number(v)===Number(opts.day));if(idx<0)return;
+      const {ctx,chartArea:{right,top,bottom},scales:{x}}=chart,xPos=x.getPixelForValue(idx);
+      ctx.save();ctx.fillStyle=opts.fill||"rgba(35,94,167,.06)";ctx.fillRect(xPos,top,right-xPos,bottom-top);
+      ctx.beginPath();ctx.setLineDash([4,4]);ctx.strokeStyle=opts.line||"#235ea7";ctx.lineWidth=1.5;ctx.moveTo(xPos,top);ctx.lineTo(xPos,bottom);ctx.stroke();ctx.restore();
+    }
+  };
   function chartDefaults(){
     const c=themeColors();Chart.defaults.color=c.muted;Chart.defaults.borderColor=c.line;Chart.defaults.font.family='Inter, system-ui, sans-serif';
     return c;
   }
   function initCharts(){
     if(typeof Chart==="undefined"){$("#sCurve").style.display="none";$("#chartError").style.display="grid";return}
-    const c=chartDefaults(),cd=currentCurve(),common={responsive:true,maintainAspectRatio:false,animation:{duration:500},interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8,padding:18}},tooltip:{backgroundColor:c.surface,titleColor:getComputedStyle(document.documentElement).getPropertyValue("--text"),bodyColor:c.muted,borderColor:c.line,borderWidth:1,padding:12,callbacks:{label:x=>`${x.dataset.label}: $${Number(x.raw).toFixed(2)} M`}}},scales:{x:{grid:{display:false},title:{display:true,text:"Día del proyecto"}},y:{beginAtZero:true,grid:{color:c.line},ticks:{callback:v=>`$${v}M`}}}};
-    state.charts.s=new Chart($("#sCurve"),{type:"line",data:{labels:cd.labels,datasets:[{label:"PV · Plan",data:cd.pv,borderColor:c.accent,backgroundColor:c.accent,tension:.35,pointRadius:3,borderWidth:2.5},{label:"EV · Ganado",data:cd.ev,borderColor:c.ok,backgroundColor:c.ok,tension:.35,pointRadius:3,borderWidth:2.5},{label:"AC · Real",data:cd.ac,borderColor:c.bad,backgroundColor:c.bad,tension:.35,pointRadius:3,borderWidth:2.5}]},options:common});
-    state.charts.cost=new Chart($("#costChart"),{type:"bar",data:{labels:disciplines.map(d=>d.name),datasets:[{label:"Variación CV",data:disciplines.map(d=>(d.ev-d.ac)/1e6),backgroundColor:disciplines.map(d=>d.ev-d.ac<0?c.bad:c.ok),borderRadius:6}]},options:{...common,plugins:{...common.plugins,legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:c.line},ticks:{callback:v=>`$${v}M`}}}}});
-    state.charts.bim=new Chart($("#bimChart"),{type:"doughnut",data:{labels:["Críticas","Altas","Medias","Bajas"],datasets:[{data:[9,13,11,5],backgroundColor:[c.bad,"#e59b3c",c.accent,c.ok],borderColor:c.surface,borderWidth:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:"68%",plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8,padding:18}}}}});
+    Chart.register(cutoffZone);
+    const c=chartDefaults(),cd=currentCurve(),m=evm(state.snapshot);
+    const common={responsive:true,maintainAspectRatio:false,animation:{duration:450},interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8,padding:18}},tooltip:{backgroundColor:c.surface,titleColor:getComputedStyle(document.documentElement).getPropertyValue("--text"),bodyColor:c.muted,borderColor:c.line,borderWidth:1,padding:12,callbacks:{label:x=>x.raw===null?"":`${x.dataset.label}: $${Number(x.raw).toFixed(2)} M`,afterBody:items=>items.some(x=>Number(x.label)===state.snapshot.day)?[`CV ${money(m.cv)} · SV ${money(m.sv)}`]:[]}}},scales:{x:{grid:{display:false},title:{display:true,text:"Día del proyecto"}},y:{beginAtZero:true,grid:{color:c.line},ticks:{callback:v=>`$${v}M`}}}};
+    state.charts.s=new Chart($("#sCurve"),{type:"line",data:{labels:cd.labels,datasets:[
+      {label:"PV · Plan",data:cd.pv,borderColor:c.accent,backgroundColor:c.accent,tension:.32,pointRadius:2.5,borderWidth:2.5},
+      {label:"EV · Ganado",data:cd.ev,borderColor:c.ok,backgroundColor:c.ok,tension:.32,pointRadius:3,borderWidth:2.5,spanGaps:false},
+      {label:"AC · Real",data:cd.ac,borderColor:c.bad,backgroundColor:c.bad,tension:.32,pointRadius:3,borderWidth:2.5,spanGaps:false},
+      {label:"Forecast AC · EAC",data:cd.forecast,borderColor:c.warn,backgroundColor:c.warn,tension:.25,pointRadius:0,borderWidth:2,borderDash:[7,5],spanGaps:true}
+    ]},options:{...common,plugins:{...common.plugins,cutoffZone:{day:state.snapshot.day,fill:c.accentSoft,line:c.accent}}}});
+    const costOrder=[...disciplines].sort((a,b)=>(a.ev-a.ac)-(b.ev-b.ac));
+    state.charts.cost=new Chart($("#costChart"),{
+      type:"bar",
+      data:{labels:costOrder.map(d=>d.name),datasets:[{label:"CV",data:costOrder.map(d=>(d.ev-d.ac)/1e6),backgroundColor:costOrder.map(d=>d.ev-d.ac<0?c.bad:c.ok),borderRadius:7,borderSkipped:false}]},
+      options:{
+        responsive:true,maintainAspectRatio:false,indexAxis:"y",animation:{duration:450},
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            backgroundColor:c.surface,titleColor:getComputedStyle(document.documentElement).getPropertyValue("--text"),bodyColor:c.muted,borderColor:c.line,borderWidth:1,padding:12,
+            callbacks:{
+              label:x=>`CV ${money(x.raw*1e6)}`,
+              afterLabel:x=>{const d=costOrder[x.dataIndex];return `Brecha plan-real ${(d.real-d.plan).toFixed(1)} pp · CPI ${(d.ev/d.ac).toFixed(3)}`}
+            }
+          }
+        },
+        scales:{x:{grid:{color:c.line},ticks:{callback:v=>`$${v}M`},title:{display:true,text:"Variación de costo · USD M"}},y:{grid:{display:false}}}
+      }
+    });
+    const severities=["Crítica","Alta","Media"],expired=severities.map(s=>clashes.filter(x=>x.severity===s&&x.status==="Vencido").length),open=severities.map(s=>clashes.filter(x=>x.severity===s&&x.status!=="Vencido").length);
+    state.charts.bim=new Chart($("#bimChart"),{type:"bar",data:{labels:severities,datasets:[{label:"Vencidos",data:expired,backgroundColor:c.bad,borderRadius:6},{label:"Abiertos / revisión",data:open,backgroundColor:c.accent,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:"y",plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8,padding:18}},tooltip:{backgroundColor:c.surface,titleColor:getComputedStyle(document.documentElement).getPropertyValue("--text"),bodyColor:c.muted,borderColor:c.line,borderWidth:1,padding:12}},scales:{x:{stacked:true,beginAtZero:true,ticks:{precision:0},grid:{color:c.line},title:{display:true,text:"Issues prioritarios"}},y:{stacked:true,grid:{display:false}}}}});
   }
   function refreshCharts(){
     if(!state.charts.s)return;
@@ -475,7 +586,9 @@
     const m=evm(state.snapshot);
     $("#physicalTop").textContent=pct(m.physical);$("#financialTop").textContent=pct(m.ac/m.bac*100);$("#forecastTop").textContent=money(m.eac);
     $("#dayLabel").textContent=`Día ${m.day}`;$("#durationLabel").textContent=`${pct(m.day/m.duration*100)} del plazo`;$("#timeProgress").style.width=`${Math.min(100,m.day/m.duration*100)}%`;$("#spiSchedule").textContent=m.spi.toFixed(3);
-    $("#curveSubtitle").textContent=`Punto de corte · día actual ${m.day}`;
+    $("#curveSubtitle").textContent=`Corte simulado · día actual ${m.day} · forecast punteado hasta EAC`;
+    $("#curveInsight").textContent=`AC supera EV en ${money(Math.max(0,m.ac-m.ev))}`;
+    const driver=[...disciplines].sort((a,b)=>(a.ev-a.ac)-(b.ev-b.ac))[0];$("#costDriverInsight").textContent=`${driver.name} · ${money(driver.ev-driver.ac)}`;
     const severe=m.cpi<.95||m.spi<.95,healthy=m.cpi>=1&&m.spi>=1;
     $("#generalState").textContent=healthy?"Desempeño controlado":severe?"Intervención inmediata":"Intervención requerida";
     $("#generalPill").className=`status-pill ${healthy?"ok":severe?"bad":"warn"}`;
@@ -487,11 +600,58 @@
     $("#upcomingList").innerHTML=upcoming.length?upcoming.map((a,i)=>`<div class="action"><span class="action-num">${i+1}</span><div><p>${a.name}</p><small>${a.owner} · inicia día ${a.start}</small></div>${badge(a.status)}</div>`).join(""):`<div class="empty" style="display:block">No hay inicios próximos en esta ventana.</div>`;
   }
   function render(){
-    renderTop();renderKpis("#kpiGrid");renderKpis("#costKpis",kpiData().slice(4));renderDisciplines();renderActivities();renderAlerts();renderExecutive();renderActions();renderRisks();renderBim();renderUpcoming();
+    renderTop();renderKpis("#kpiGrid",executiveKpis());renderKpis("#costKpis");renderDisciplines();renderActivities();renderAlerts();renderExecutive();renderActions();renderRisks();renderBim();renderUpcoming();
   }
   function changeView(id){
-    state.view=id;$$(".view").forEach(v=>v.classList.toggle("active",v.id===id));$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));window.scrollTo({top:0,behavior:"smooth"});
+    state.view=id;$$(".view").forEach(v=>v.classList.toggle("active",v.id===id));$$(".nav button").forEach(b=>{const active=b.dataset.view===id;b.classList.toggle("active",active);active?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current")});window.scrollTo({top:0,behavior:"smooth"});
     setTimeout(()=>Object.values(state.charts).forEach(c=>c.resize()),50);
+  }
+  let lastCopilotResponse=null,previousFocus=null;
+  function copilotResponse(question){
+    const q=question.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""),m=evm(state.snapshot);
+    const late=activities.filter(a=>["Retrasada","Crítica","En riesgo"].includes(a.status));
+    const topCost=[...disciplines].sort((a,b)=>(a.ev-a.ac)-(b.ev-b.ac))[0];
+    const criticalRisks=[...risks].sort((a,b)=>b.p*b.i-a.p*a.i).slice(0,2);
+    const urgentClashes=clashes.filter(c=>c.status==="Vencido"||c.severity==="Crítica").slice(0,3);
+    const base={supported:true,confidence:"Alta para cálculos · Media para causalidad",assumption:"Datos simulados del corte visible; no se consultan P6, ERP ni CDE.",actions:[],evidence:[]};
+    if(/riesgo/.test(q)&&/(bim|interferencia|clash)/.test(q)){
+      return {...base,intent:"Riesgos + BIM",diagnosis:`Los riesgos ${criticalRisks.map(r=>r.id).join(" y ")} concentran la mayor exposición; ${urgentClashes.length} issues BIM son críticos o están vencidos.`,impact:"La combinación de suministro HVAC, cambios de arquitectura e interferencias MEP puede ampliar la presión simultánea sobre plazo y costo en frentes ya restringidos.",evidence:[...criticalRisks.map(r=>({label:`${r.id} · exposición ${r.p*r.i}`,view:"risks"})),...urgentClashes.slice(0,2).map(c=>({label:`${c.id} · ${c.status}`,view:"bim"}))],actions:["Sofía: Big Room de cierre por zonas en 24 h.","Diego: confirmar alternativa de equipos HVAC en 48 h.","PM: validar responsables y fechas antes de liberar frentes."]};
+    }
+    if(/(costo|sobrecosto|bac|forecast|eac|cpi|tcpi|recuperar)/.test(q)){
+      const recovery=/recuperar|bac|tcpi/.test(q);
+      const forecastState=m.eac>m.bac+1000?"proyecta un cierre por encima del presupuesto":m.eac<m.bac-1000?"proyecta un cierre por debajo del presupuesto":"mantiene el cierre alineado con el BAC";
+      return {...base,intent:"Costo y forecast",diagnosis:`CPI ${m.cpi.toFixed(3)}, CV ${money(m.cv)} y disciplina driver ${topCost.name} con CPI ${(topCost.ev/topCost.ac).toFixed(3)}.`,impact:`El EAC probable es ${money(m.eac)} y el VAC ${money(m.vac)}. ${recovery?`Para proteger el BAC, la eficiencia restante debe llegar a TCPI ${m.tcpi.toFixed(3)}.`:`Mantener la eficiencia actual ${forecastState}.`}`,evidence:[{label:`CPI ${m.cpi.toFixed(3)} · CV ${money(m.cv)}`,view:"costs"},{label:`${topCost.name} · CV ${money(topCost.ev-topCost.ac)}`,view:"costs"},{label:`EAC ${money(m.eac)} · VAC ${money(m.vac)}`,view:"costs"}],actions:[`${topCost.owner}: revalidar rendimiento y compromisos de ${topCost.name} en 48 h.`,"PMO: congelar cambios sin impacto aprobado.","Costos: contrastar el EAC con compromisos y contingencia antes del próximo corte."]};
+    }
+    if(/(plazo|actividad|spi|cronograma|retras)/.test(q)){
+      return {...base,intent:"Plazo",diagnosis:`SPI ${m.spi.toFixed(3)} y SV ${money(m.sv)}. ${late.length} actividades están retrasadas, críticas o en riesgo.`,impact:`El ritmo actual representa aproximadamente ${Math.round((1-m.spi)*m.duration)} días de presión sobre el plan; HVAC y acabados condicionan la liberación de frentes.`,evidence:[{label:`SPI ${m.spi.toFixed(3)} · SV ${money(m.sv)}`,view:"schedule"},...late.slice(0,2).map(a=>({label:`${a.id} · ${a.name}`,view:"schedule"}))],actions:[`${late[0]?.owner||"Planning"}: emitir recuperación de ${late[0]?.name||"ruta crítica"} en 48 h.`,"Producción: balancear cuadrillas y restricciones del lookahead.","PM: validar impacto sobre hitos contractuales."]};
+    }
+    if(/(bim|interferencia|clash|rfi|modelo)/.test(q)){
+      return {...base,intent:"BIM/VDC",diagnosis:`Se reportan 38 interferencias abiertas; 9 son críticas. Entre los issues prioritarios, ${urgentClashes.length} están vencidos o son críticos.`,impact:"Los clashes MEP–estructura y restricciones de altura pueden generar retrabajo si se libera instalación antes del cierre coordinado.",evidence:urgentClashes.map(c=>({label:`${c.id} · ${c.name}`,view:"bim"})),actions:["Sofía: cerrar BIM-142 y BIM-128 por zona en 24 h.","Coordinación: vincular cada issue con RFI y responsable.","Producción: bloquear instalación en zonas sin liberación BIM."]};
+    }
+    if(/riesgo/.test(q)){
+      return {...base,intent:"Riesgos",diagnosis:`Hay ${risks.filter(r=>r.p*r.i>=15).length} riesgos críticos. ${criticalRisks[0].id} alcanza exposición ${criticalRisks[0].p*criticalRisks[0].i}.`,impact:"Equipos HVAC y cambios de arquitectura combinan probabilidad alta con impacto directo sobre compras, retrabajos y secuencia.",evidence:criticalRisks.map(r=>({label:`${r.id} · P${r.p} × I${r.i}`,view:"risks"})),actions:[`${criticalRisks[0].owner}: actualizar respuesta y evidencia en 48 h.`,"PM: revisar reserva y gatillos de escalamiento.","Risk owner: confirmar riesgo residual después de la respuesta."]};
+    }
+    if(/(decision|hoy|estado|situacion|proyecto|desviacion)/.test(q)){
+      const scheduleState=m.spi<1?"retraso leve":"plazo controlado",costState=m.cpi<1?"sobrecosto material":"costo controlado";
+      return {...base,intent:"Estado ejecutivo",diagnosis:`El proyecto combina ${scheduleState} (SPI ${m.spi.toFixed(3)}) con ${costState} (CPI ${m.cpi.toFixed(3)}).`,impact:`La proyección de cierre es ${money(m.eac)}, con VAC ${money(m.vac)} y ${late.length} actividades bajo presión.`,evidence:[{label:`CPI ${m.cpi.toFixed(3)} · Costos`,view:"costs"},{label:`SPI ${m.spi.toFixed(3)} · Cronograma`,view:"schedule"},{label:`${criticalRisks[0].id} · Riesgo principal`,view:"risks"},{label:`${urgentClashes[0]?.id||"BIM"} · Coordinación`,view:"bim"}],actions:["Validar recuperación HVAC y acabados hoy.","Cerrar issues BIM críticos antes de liberar frentes.","Revisar forecast y cambios sin impacto aprobado en 48 h."]};
+    }
+    return {supported:false,intent:"Fuera de alcance",diagnosis:"Esta demo solo analiza costo, plazo, riesgos, BIM y estado ejecutivo con los datos visibles.",impact:"No se generó una recomendación para evitar inferencias sin evidencia.",evidence:[],actions:["Selecciona una consulta sugerida o pregunta por CPI, SPI, EAC, actividades, riesgos o interferencias."],confidence:"No aplica",assumption:"Motor local limitado a cinco intenciones."};
+  }
+  function renderCopilotAnswer(response){
+    lastCopilotResponse=response;
+    const evidence=response.evidence.length?`<div class="evidence-list">${response.evidence.map(e=>`<button class="evidence-link" data-target="${e.view}">${e.label} →</button>`).join("")}</div>`:"<p>Sin evidencia aplicable para esta intención.</p>";
+    $("#copilotAnswer").classList.remove("empty-answer");
+    $("#copilotAnswer").innerHTML=`<div class="answer-block"><h3>${response.intent} · Diagnóstico</h3><p>${response.diagnosis}</p></div><div class="answer-block"><h3>Impacto estimado</h3><p>${response.impact}</p></div><div class="answer-block"><h3>Evidencia del corte</h3>${evidence}</div><div class="answer-block"><h3>Acciones sugeridas</h3><ul>${response.actions.map(a=>`<li>${a}</li>`).join("")}</ul></div><div class="answer-block confidence"><span>${response.confidence}</span><span>Requiere validación del Project Manager</span></div><div class="review-note">${response.assumption}</div>`;
+    $("#copilotActions").hidden=false;$("#reviewBtn").textContent="☆ Marcar para revisión";
+  }
+  function askCopilot(question){const value=question.trim();if(!value)return;$("#copilotInput").value=value;renderCopilotAnswer(copilotResponse(value))}
+  function openCopilot(question=""){
+    previousFocus=document.activeElement;$("#copilotOverlay").hidden=false;$("#copilotDrawer").hidden=false;$("#copilotOverlay").offsetWidth;$("#copilotOverlay").classList.add("open");$("#copilotDrawer").classList.add("open");$("#copilotOverlay").setAttribute("aria-hidden","false");$("#copilotDrawer").setAttribute("aria-hidden","false");$("#copilotDrawer").removeAttribute("inert");document.body.style.overflow="hidden";
+    setTimeout(()=>{if(question)askCopilot(question);$("#copilotInput").focus()},160);
+  }
+  function closeCopilot(){
+    $("#copilotOverlay").classList.remove("open");$("#copilotDrawer").classList.remove("open");$("#copilotOverlay").setAttribute("aria-hidden","true");$("#copilotDrawer").setAttribute("aria-hidden","true");$("#copilotDrawer").setAttribute("inert","");document.body.style.overflow="";previousFocus?.focus();
+    setTimeout(()=>{if(!$("#copilotDrawer").classList.contains("open")){$("#copilotOverlay").hidden=true;$("#copilotDrawer").hidden=true}},250);
   }
   initSelects();render();initCharts();
   $$(".nav button").forEach(b=>b.addEventListener("click",()=>changeView(b.dataset.view)));
@@ -500,6 +660,19 @@
   $("#resetFilters").addEventListener("click",()=>{Object.keys(state.filters).forEach(k=>{state.filters[k]="all";$("#"+k+"Filter").value="all"});renderDisciplines();renderActivities();renderUpcoming()});
   $("#themeBtn").addEventListener("click",()=>{const t=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=t;localStorage.setItem("pc-theme",t);refreshCharts()});
   $("#printBtn").addEventListener("click",()=>window.print());
+  $("#copilotBtn").addEventListener("click",()=>openCopilot("¿Qué requiere decisión hoy?"));
+  $("#closeCopilot").addEventListener("click",closeCopilot);$("#copilotOverlay").addEventListener("click",closeCopilot);
+  $("#promptGrid").addEventListener("click",e=>{const button=e.target.closest("[data-prompt]");if(button)askCopilot(button.dataset.prompt)});
+  $("#copilotForm").addEventListener("submit",e=>{e.preventDefault();askCopilot($("#copilotInput").value)});
+  $("#copilotAnswer").addEventListener("click",e=>{const button=e.target.closest("[data-target]");if(button){changeView(button.dataset.target);closeCopilot()}});
+  $("#reviewBtn").addEventListener("click",()=>{if(!lastCopilotResponse)return;localStorage.setItem("genplus-copilot-review",JSON.stringify({savedAt:new Date().toISOString(),response:lastCopilotResponse}));$("#reviewBtn").textContent="✓ Marcado localmente para revisión"});
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape"&&$("#copilotDrawer").classList.contains("open"))closeCopilot();
+    if(e.key==="Tab"&&$("#copilotDrawer").classList.contains("open")){
+      const focusables=$$("#copilotDrawer button,#copilotDrawer input").filter(el=>!el.disabled&&el.offsetParent!==null),first=focusables[0],last=focusables.at(-1);
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+    }
+  });
   const dialog=$("#editDialog");
   $("#editBtn").addEventListener("click",()=>{Object.entries(state.snapshot).forEach(([k,v])=>{const el=$("#"+k+"Input");if(el)el.value=v});dialog.showModal()});
   $("#closeDialog").addEventListener("click",()=>dialog.close());$("#cancelDialog").addEventListener("click",()=>dialog.close());
