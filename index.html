@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Dashboard demostrativo de Project Controls, Valor Ganado y BIM/VDC.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2216%22 fill=%22%2318304f%22/><path d=%22M18 44V20h7l14 14V20h7v24h-7L25 30v14z%22 fill=%22white%22/></svg>">
+  <title>NEXUS Control · Project Controls</title>
+  <script>
+    (()=>{const t=localStorage.getItem("pc-theme")||"light";document.documentElement.dataset.theme=t;})();
+  </script>
+  <style>
+    :root{
+      color-scheme:light;
+      --hue:250;--chroma:.07;
+      --brand:#18304f;--brand-2:#284c78;--accent:#235ea7;--accent-soft:#eaf2fc;
+      --bg:#f3f6fa;--surface:#fff;--surface-2:#f8fafc;--text:#122034;--muted:#617085;
+      --line:#dbe3ed;--ok:#14866d;--ok-soft:#e6f6f1;--warn:#b87509;--warn-soft:#fff4d9;
+      --bad:#c24148;--bad-soft:#fdebed;--info:#2868b7;--shadow:0 12px 34px rgba(25,48,79,.08);
+      --radius:16px;--ease:cubic-bezier(.2,.8,.2,1);
+    }
+    html[data-theme="dark"]{
+      color-scheme:dark;--brand:#dce9f8;--brand-2:#91b4df;--accent:#69a9f5;--accent-soft:#173050;
+      --bg:#0b1320;--surface:#111c2b;--surface-2:#162334;--text:#eef5fc;--muted:#a5b4c7;
+      --line:#27384d;--ok:#56c9aa;--ok-soft:#12372f;--warn:#f2bd55;--warn-soft:#3b2d13;
+      --bad:#ff858b;--bad-soft:#421d25;--info:#7ab4f8;--shadow:0 18px 40px rgba(0,0,0,.28)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    button,select,input{font:inherit;color:inherit}
+    button,select{min-height:44px}
+    button{user-select:none}
+    :focus-visible{outline:none;box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--accent)!important}
+    .app{min-height:100vh}
+    .topbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--surface) 94%,transparent);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+    .topbar-inner{max-width:1560px;margin:auto;padding:12px 24px;display:flex;align-items:center;gap:18px}
+    .brand{display:flex;align-items:center;gap:11px;min-width:220px}
+    .brand-mark{width:36px;height:36px;border-radius:11px;background:var(--brand);color:var(--surface);display:grid;place-items:center;font-weight:800;letter-spacing:-.05em}
+    [data-theme="dark"] .brand-mark{background:var(--accent);color:#07111e}
+    .brand strong{display:block;font-size:14px;letter-spacing:.04em}
+    .brand small{display:block;color:var(--muted);font-size:11px}
+    .nav{display:flex;gap:4px;overflow:auto;scrollbar-width:none}
+    .nav button{border:0;background:transparent;padding:0 14px;border-radius:10px;color:var(--muted);white-space:nowrap;font-weight:650;cursor:pointer}
+    .nav button:hover,.nav button.active{background:var(--accent-soft);color:var(--accent)}
+    .top-actions{margin-left:auto;display:flex;gap:8px}
+    .icon-btn,.primary-btn,.ghost-btn{border:1px solid var(--line);background:var(--surface);border-radius:11px;padding:0 13px;cursor:pointer;font-weight:650}
+    .icon-btn{width:44px;padding:0;font-size:18px}
+    .primary-btn{border-color:var(--accent);background:var(--accent);color:#fff}
+    .primary-btn:hover{filter:brightness(1.06)}
+    .ghost-btn:hover,.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+    .page{max-width:1560px;margin:auto;padding:24px}
+    .hero{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:stretch;margin-bottom:18px}
+    .hero-main{background:var(--brand);color:#fff;border-radius:20px;padding:26px 28px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+    [data-theme="dark"] .hero-main{background:#132945}
+    .hero-main:after{content:"";position:absolute;width:320px;height:320px;border-radius:50%;right:-120px;top:-170px;background:radial-gradient(circle,rgba(91,165,255,.35),transparent 68%);pointer-events:none}
+    .eyebrow{display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:800;opacity:.8}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--warn)}
+    .hero h1{font-size:clamp(25px,3vw,38px);letter-spacing:-.04em;line-height:1.08;margin:12px 0 8px;text-wrap:balance}
+    .hero-meta{display:flex;flex-wrap:wrap;gap:9px 20px;color:#d9e5f2}
+    .hero-meta span{display:flex;gap:6px}
+    .progress-line{margin-top:25px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+    .progress{height:8px;border-radius:99px;background:rgba(255,255,255,.17);overflow:hidden}
+    .progress i{display:block;height:100%;width:60%;background:#6ccbb2;border-radius:inherit}
+    .hero-side{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow)}
+    .status-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+    .status-row h2{margin:0;font-size:18px;letter-spacing:-.02em}
+    .status-pill,.badge{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:6px 10px;font-weight:750;font-size:11px}
+    .status-pill.warn,.badge.warn{background:var(--warn-soft);color:var(--warn)}
+    .status-pill.bad,.badge.bad{background:var(--bad-soft);color:var(--bad)}.status-pill.ok,.badge.ok{background:var(--ok-soft);color:var(--ok)}.badge.info{background:var(--accent-soft);color:var(--info)}
+    .hero-signal{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}
+    .signal{padding:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px}
+    .signal small{color:var(--muted);display:block}.signal strong{font-size:18px;font-variant-numeric:tabular-nums}
+    .demo-note{margin-top:14px;color:var(--muted);font-size:12px}
+    .filterbar{display:flex;align-items:end;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:18px}
+    .filter{display:grid;gap:5px;min-width:160px}.filter label{font-size:11px;color:var(--muted);font-weight:750;text-transform:uppercase;letter-spacing:.07em}
+    select,input{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:0 12px;min-height:44px;font-size:16px}
+    .filter-reset{margin-left:auto}
+    .view{display:none}.view.active{display:block}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:24px 0 12px}
+    .section-head h2{margin:0;font-size:18px;letter-spacing:-.02em}.section-head p{margin:3px 0 0;color:var(--muted);font-size:12px}
+    .kpis{display:grid;grid-template-columns:repeat(6,minmax(145px,1fr));gap:12px}
+    .kpi{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:16px;min-height:126px;box-shadow:0 6px 18px rgba(20,40,70,.035);position:relative}
+    .kpi:before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;border-radius:0 5px 5px 0;background:var(--info)}
+    .kpi[data-state="bad"]:before{background:var(--bad)}.kpi[data-state="warn"]:before{background:var(--warn)}.kpi[data-state="ok"]:before{background:var(--ok)}
+    .kpi-top{display:flex;justify-content:space-between;align-items:center}.kpi-label{color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em}.traffic{width:9px;height:9px;border-radius:50%;background:var(--info);box-shadow:0 0 0 4px var(--accent-soft)}
+    .kpi[data-state="bad"] .traffic{background:var(--bad);box-shadow:0 0 0 4px var(--bad-soft)}.kpi[data-state="warn"] .traffic{background:var(--warn);box-shadow:0 0 0 4px var(--warn-soft)}.kpi[data-state="ok"] .traffic{background:var(--ok);box-shadow:0 0 0 4px var(--ok-soft)}
+    .kpi-value{font-size:clamp(20px,2vw,27px);font-weight:780;letter-spacing:-.035em;margin:12px 0 3px;font-variant-numeric:tabular-nums}.kpi-note{color:var(--muted);font-size:11px}
+    .grid-2{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(300px,.8fr);gap:14px}
+    .grid-equal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 6px 22px rgba(20,40,70,.035)}
+    .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.panel-head h3{font-size:15px;margin:0}.panel-head p{color:var(--muted);font-size:11px;margin:3px 0 0}
+    .chart-wrap{height:340px;position:relative}.chart-error{display:none;height:100%;place-items:center;text-align:center;color:var(--muted);background:var(--surface-2);border-radius:12px;padding:20px}
+    .alerts{display:grid;gap:9px}.alert{border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:12px;padding:12px;background:var(--surface-2)}.alert.bad{border-left-color:var(--bad)}
+    .alert-top{display:flex;justify-content:space-between;gap:10px}.alert strong{font-size:13px}.alert p{margin:5px 0;color:var(--muted);font-size:12px}.alert small{font-size:10px;color:var(--muted)}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:13px}
+    table{width:100%;border-collapse:collapse;min-width:760px;font-variant-numeric:tabular-nums}
+    th{padding:11px 13px;text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em;background:var(--surface-2);position:sticky;top:0;z-index:1}
+    td{padding:13px;border-top:1px solid var(--line);vertical-align:middle}tbody tr:hover{background:var(--surface-2)}
+    .discipline-name{font-weight:700}.sub{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+    .bar{height:7px;min-width:110px;background:var(--line);border-radius:99px;overflow:hidden}.bar span{display:block;height:100%;background:var(--accent);border-radius:inherit}.bar.real span{background:var(--ok)}
+    .gantt-table{min-width:1080px}.gantt-cell{min-width:320px}.gantt-track{height:20px;position:relative;background:repeating-linear-gradient(90deg,var(--surface-2) 0,var(--surface-2) calc(10% - 1px),var(--line) calc(10% - 1px),var(--line) 10%);border-radius:5px;overflow:hidden}
+    .gantt-bar{position:absolute;height:12px;top:4px;border-radius:4px;background:var(--accent);min-width:3px}.gantt-bar.late{background:var(--bad)}.gantt-bar.done{background:var(--ok)}
+    .metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.mini-metric{border:1px solid var(--line);border-radius:13px;padding:14px;background:var(--surface-2)}.mini-metric span{color:var(--muted);font-size:11px}.mini-metric strong{display:block;font-size:21px;margin-top:5px;font-variant-numeric:tabular-nums}
+    .action-list{display:grid;gap:9px}.action{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:start;border:1px solid var(--line);border-radius:12px;padding:12px}.action-num{width:28px;height:28px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:800}.action p{margin:0;font-weight:700}.action small{color:var(--muted)}
+    .executive{border-left:4px solid var(--accent);background:linear-gradient(115deg,var(--surface),var(--accent-soft));}.executive p{font-size:14px;line-height:1.7;margin:0}.executive strong{color:var(--accent)}
+    .risk-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;max-width:440px}.risk-cell{aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font-weight:800;font-size:11px;background:var(--ok-soft);color:var(--ok)}.risk-cell.med{background:var(--warn-soft);color:var(--warn)}.risk-cell.high{background:var(--bad-soft);color:var(--bad)}
+    .empty{display:none;padding:32px;text-align:center;color:var(--muted)}
+    dialog{border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--text);padding:0;width:min(620px,calc(100% - 28px));box-shadow:0 30px 90px rgba(0,0,0,.35)}dialog::backdrop{background:rgba(4,10,18,.55);backdrop-filter:blur(3px)}
+    .dialog-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line)}.dialog-head h2{margin:0;font-size:18px}.dialog-body{padding:20px}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.form-field{display:grid;gap:5px}.form-field label{font-weight:700;font-size:12px}.form-field input{width:100%}.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+    .footer{max-width:1560px;margin:auto;padding:4px 24px 26px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:16px}
+    .only-mobile{display:none}
+    @media(max-width:1150px){.kpis{grid-template-columns:repeat(3,1fr)}.metric-grid{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}.nav{order:3;width:100%}.topbar-inner{flex-wrap:wrap}.top-actions{margin-left:auto}}
+    @media(max-width:720px){.page{padding:14px}.topbar-inner{padding:10px 14px}.brand{min-width:0}.brand small{display:none}.top-actions .primary-btn span{display:none}.hero-main,.hero-side{padding:20px}.hero-signal{grid-template-columns:1fr}.filterbar{align-items:stretch}.filter{min-width:calc(50% - 6px);flex:1}.filter-reset{margin-left:0}.kpis{grid-template-columns:repeat(2,1fr)}.grid-equal{grid-template-columns:1fr}.metric-grid{grid-template-columns:repeat(2,1fr)}.chart-wrap{height:290px}.form-grid{grid-template-columns:1fr}.footer{padding:4px 14px 22px;flex-direction:column}.only-mobile{display:inline}}
+    @media(max-width:410px){.kpis{grid-template-columns:1fr}.filter{min-width:100%}.hero-meta{display:grid}.metric-grid{grid-template-columns:1fr}.top-actions{gap:5px}.icon-btn{width:42px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+    @media print{
+      :root{--bg:#fff;--surface:#fff;--surface-2:#f7f8fa;--text:#111;--muted:#555;--line:#ccd2d8}
+      .topbar,.filterbar,.no-print,dialog{display:none!important}.page{max-width:none;padding:0}.view{display:block!important;break-before:page}.view:first-of-type{break-before:auto}.hero-main{background:#18304f!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.panel,.kpi,.hero-main,.hero-side{box-shadow:none;break-inside:avoid}.kpis{grid-template-columns:repeat(4,1fr)}.grid-2,.grid-equal{grid-template-columns:1fr}.chart-wrap{height:280px}.footer{max-width:none;padding:10px 0}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" aria-label="NEXUS Project Controls">
+        <div class="brand-mark">N+</div><div><strong>NEXUS CONTROL</strong><small>Project Controls · BIM/VDC</small></div>
+      </div>
+      <nav class="nav" aria-label="Vistas principales">
+        <button class="active" data-view="summary">Resumen</button>
+        <button data-view="costs">Costos</button>
+        <button data-view="schedule">Cronograma</button>
+        <button data-view="bim">BIM</button>
+        <button data-view="risks">Riesgos</button>
+      </nav>
+      <div class="top-actions">
+        <button class="primary-btn" id="editBtn" aria-label="Editar datos del corte">✎ <span>Editar corte</span></button>
+        <button class="icon-btn" id="printBtn" aria-label="Imprimir o exportar PDF" title="Imprimir / Exportar PDF">⤓</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema" title="Cambiar tema">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero" aria-labelledby="projectTitle">
+      <div class="hero-main">
+        <div class="eyebrow"><span class="dot"></span> Corte de control · 03 julio 2026</div>
+        <h1 id="projectTitle">Centro Empresarial Horizonte</h1>
+        <div class="hero-meta">
+          <span>Cliente: <strong>Inmobiliaria Andina</strong></span>
+          <span>Ubicación: <strong>Lima, Perú</strong></span>
+          <span>Plazo: <strong>05 ene — 31 oct 2026</strong></span>
+        </div>
+        <div class="progress-line">
+          <strong id="dayLabel">Día 180</strong><div class="progress" aria-label="Avance del plazo"><i id="timeProgress"></i></div><span id="durationLabel">60% del plazo</span>
+        </div>
+      </div>
+      <aside class="hero-side" aria-label="Estado ejecutivo">
+        <div class="status-row">
+          <div><div class="eyebrow" style="color:var(--muted)">Estado general</div><h2 id="generalState">Intervención requerida</h2></div>
+          <span class="status-pill warn" id="generalPill">● Retraso leve · Sobrecosto</span>
+        </div>
+        <div class="hero-signal">
+          <div class="signal"><small>Avance físico</small><strong id="physicalTop">60.0%</strong></div>
+          <div class="signal"><small>Avance financiero</small><strong id="financialTop">65.2%</strong></div>
+          <div class="signal"><small>Forecast</small><strong id="forecastTop">$27.53 M</strong></div>
+        </div>
+        <div class="demo-note">Datos demostrativos · EV ponderado por presupuesto · Actualización simulada</div>
+      </aside>
+    </section>
+
+    <form class="filterbar no-print" id="filterForm" aria-label="Filtros del dashboard">
+      <div class="filter"><label for="disciplineFilter">Disciplina</label><select id="disciplineFilter"><option value="all">Todas</option></select></div>
+      <div class="filter"><label for="ownerFilter">Responsable</label><select id="ownerFilter"><option value="all">Todos</option></select></div>
+      <div class="filter"><label for="statusFilter">Estado</label><select id="statusFilter"><option value="all">Todos</option><option>En plazo</option><option>Adelantada</option><option>En riesgo</option><option>Retrasada</option><option>Crítica</option><option>Completada</option></select></div>
+      <div class="filter"><label for="periodFilter">Periodo</label><select id="periodFilter"><option value="all">Corte completo</option><option value="7">Próximos 7 días</option><option value="30">Próximos 30 días</option><option value="late">Solo vencidas</option></select></div>
+      <button class="ghost-btn filter-reset" type="button" id="resetFilters">Restablecer</button>
+    </form>
+
+    <section class="view active" id="summary" aria-label="Resumen ejecutivo">
+      <div class="section-head"><div><h2>Indicadores de control</h2><p>Baseline contractual y desempeño acumulado al corte</p></div><span class="badge info" id="scopeBadge">Vista global</span></div>
+      <div class="kpis" id="kpiGrid"></div>
+
+      <div class="section-head"><div><h2>Desempeño acumulado</h2><p>Curva S · PV, EV y AC en millones de USD</p></div></div>
+      <div class="grid-2">
+        <article class="panel">
+          <div class="panel-head"><div><h3>Curva S del proyecto</h3><p id="curveSubtitle">Punto de corte · día actual 180</p></div><span class="badge info">300 días</span></div>
+          <div class="chart-wrap"><canvas id="sCurve" aria-label="Gráfico de Curva S con PV EV y AC" role="img"></canvas><div class="chart-error" id="chartError">No fue posible cargar Chart.js. Verifica tu conexión y recarga la página.</div></div>
+        </article>
+        <aside class="panel">
+          <div class="panel-head"><div><h3>Alertas prioritarias</h3><p>Generadas automáticamente por umbrales</p></div><span class="badge bad" id="alertCount">0 activas</span></div>
+          <div class="alerts" id="alertsList"></div>
+        </aside>
+      </div>
+
+      <div class="section-head"><div><h2>Avance por disciplina</h2><p>Plan, avance real, costo y eficiencia</p></div></div>
+      <article class="panel"><div class="table-wrap"><table><thead><tr><th>Disciplina</th><th>BAC</th><th>Plan</th><th>Real</th><th>EV</th><th>AC</th><th>CPI</th><th>Estado</th></tr></thead><tbody id="disciplineRows"></tbody></table><div class="empty" id="disciplineEmpty">No hay disciplinas para los filtros seleccionados.</div></div></article>
+
+      <div class="section-head"><div><h2>Control de obra</h2><p>Señales operativas del corte semanal</p></div></div>
+      <div class="grid-equal">
+        <article class="panel">
+          <div class="panel-head"><div><h3>Producción, calidad y seguridad</h3><p>Indicadores de campo consolidados</p></div></div>
+          <div class="metric-grid">
+            <div class="mini-metric"><span>Productividad semanal</span><strong>87%</strong><small class="badge warn">Meta 95%</small></div>
+            <div class="mini-metric"><span>Inspecciones aprobadas</span><strong>94.6%</strong><small class="badge ok">+1.8 pp</small></div>
+            <div class="mini-metric"><span>Índice de frecuencia</span><strong>0.42</strong><small class="badge ok">Bajo meta 0.60</small></div>
+            <div class="mini-metric"><span>Restricciones abiertas</span><strong>18</strong><small class="badge bad">6 críticas</small></div>
+            <div class="mini-metric"><span>RFIs abiertas</span><strong>24</strong><small class="badge warn">7 vencidas</small></div>
+            <div class="mini-metric"><span>Interferencias BIM</span><strong>38</strong><small class="badge bad">9 críticas</small></div>
+            <div class="mini-metric"><span>Ensayos pendientes</span><strong>12</strong><small class="badge warn">3 esta semana</small></div>
+            <div class="mini-metric"><span>Lookahead cumplido</span><strong>82%</strong><small class="badge warn">-8 pp meta</small></div>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-head"><div><h3>Acciones de recuperación</h3><p>Priorizadas por impacto costo/plazo</p></div></div>
+          <div class="action-list" id="actionList"></div>
+        </article>
+      </div>
+
+      <div class="section-head"><div><h2>Análisis ejecutivo automático</h2><p>Lectura sugerida; requiere validación del Project Manager</p></div></div>
+      <article class="panel executive"><p id="executiveText"></p></article>
+    </section>
+
+    <section class="view" id="costs" aria-label="Control de costos">
+      <div class="section-head"><div><h2>Control de costos y forecast</h2><p>Valor Ganado · desviaciones acumuladas y eficiencia requerida</p></div></div>
+      <div class="kpis" id="costKpis"></div>
+      <div class="section-head"><div><h2>Desviación por disciplina</h2><p>EV frente a costo real acumulado</p></div></div>
+      <div class="grid-2">
+        <article class="panel"><div class="chart-wrap"><canvas id="costChart" aria-label="Variación de costos por disciplina" role="img"></canvas></div></article>
+        <article class="panel"><div class="panel-head"><div><h3>Lectura del forecast</h3><p>Escenario basado en desempeño CPI actual</p></div></div><div class="action-list" id="forecastList"></div></article>
+      </div>
+    </section>
+
+    <section class="view" id="schedule" aria-label="Cronograma">
+      <div class="section-head"><div><h2>Mini Gantt ejecutivo</h2><p>Actividades principales · enero a octubre 2026</p></div><span class="badge warn" id="lateBadge">0 retrasadas</span></div>
+      <article class="panel"><div class="table-wrap"><table class="gantt-table"><thead><tr><th>Actividad</th><th>Disciplina</th><th>Responsable</th><th>Fechas</th><th>Avance</th><th>Estado</th><th>Timeline</th></tr></thead><tbody id="activityRows"></tbody></table><div class="empty" id="activityEmpty">No hay actividades para los filtros seleccionados.</div></div></article>
+      <div class="section-head"><div><h2>Próximas actividades</h2><p>Ventana lookahead de 30 días</p></div></div>
+      <div class="grid-equal">
+        <article class="panel"><div class="action-list" id="upcomingList"></div></article>
+        <article class="panel"><div class="panel-head"><div><h3>Indicadores de plazo</h3><p>Control integrado de cronograma</p></div></div><div class="metric-grid"><div class="mini-metric"><span>SPI</span><strong id="spiSchedule">0.974</strong></div><div class="mini-metric"><span>Hitos vencidos</span><strong>2</strong></div><div class="mini-metric"><span>Ruta crítica</span><strong>34 días</strong></div><div class="mini-metric"><span>Lookahead PPC</span><strong>82%</strong></div></div></article>
+      </div>
+    </section>
+
+    <section class="view" id="bim" aria-label="Control BIM VDC">
+      <div class="section-head"><div><h2>Coordinación BIM/VDC</h2><p>Interferencias, RFIs y restricciones de diseño</p></div></div>
+      <div class="metric-grid">
+        <div class="mini-metric"><span>Clashes abiertos</span><strong>38</strong><small class="badge bad">9 críticos</small></div>
+        <div class="mini-metric"><span>Clashes cerrados / semana</span><strong>21</strong><small class="badge ok">+16%</small></div>
+        <div class="mini-metric"><span>RFIs vinculadas</span><strong>24</strong><small class="badge warn">7 vencidas</small></div>
+        <div class="mini-metric"><span>Modelos federados</span><strong>6/6</strong><small class="badge ok">Actualizados</small></div>
+      </div>
+      <div class="section-head"><div><h2>Interferencias prioritarias</h2><p>Severidad e impacto sobre frentes de trabajo</p></div></div>
+      <div class="grid-2">
+        <article class="panel"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Interferencia</th><th>Disciplinas</th><th>Severidad</th><th>Owner</th><th>Vence</th><th>Estado</th></tr></thead><tbody id="bimRows"></tbody></table></div></article>
+        <article class="panel"><div class="panel-head"><div><h3>Distribución de clashes</h3><p>Por severidad del issue</p></div></div><div class="chart-wrap"><canvas id="bimChart" aria-label="Clashes BIM por severidad" role="img"></canvas></div></article>
+      </div>
+    </section>
+
+    <section class="view" id="risks" aria-label="Riesgos">
+      <div class="section-head"><div><h2>Registro de riesgos</h2><p>Exposición cualitativa y respuesta al corte</p></div><span class="badge bad">2 críticos</span></div>
+      <div class="grid-2">
+        <article class="panel"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Riesgo</th><th>P</th><th>I</th><th>Exposición</th><th>Owner</th><th>Respuesta</th><th>Estado</th></tr></thead><tbody id="riskRows"></tbody></table></div></article>
+        <aside class="panel"><div class="panel-head"><div><h3>Matriz 5 × 5</h3><p>Probabilidad × impacto</p></div></div><div class="risk-grid" id="riskMatrix"></div><div class="demo-note">Los riesgos del registro se posicionan por P × I. Rojo ≥ 15, amarillo 8–14, verde ≤ 7.</div></aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><span>NEXUS Control v1.0 · Demo sin backend</span><span>Fuente: datos simulados coherentes · No sustituye el reporte contractual aprobado</span></footer>
+</div>
+
+<dialog id="editDialog" aria-labelledby="editTitle">
+  <form id="editForm">
+    <div class="dialog-head"><h2 id="editTitle">Actualizar datos del corte</h2><button type="button" class="icon-btn" id="closeDialog" aria-label="Cerrar">×</button></div>
+    <div class="dialog-body">
+      <div class="form-grid">
+        <div class="form-field"><label for="bacInput">BAC (USD)</label><input id="bacInput" name="bac" type="number" min="100000" step="100000" required></div>
+        <div class="form-field"><label for="pvInput">PV (USD)</label><input id="pvInput" name="pv" type="number" min="0" step="100000" required></div>
+        <div class="form-field"><label for="evInput">EV (USD)</label><input id="evInput" name="ev" type="number" min="0" step="100000" required></div>
+        <div class="form-field"><label for="acInput">AC (USD)</label><input id="acInput" name="ac" type="number" min="0" step="100000" required></div>
+        <div class="form-field"><label for="physicalInput">Avance físico (%)</label><input id="physicalInput" name="physical" type="number" min="0" max="100" step=".1" required></div>
+        <div class="form-field"><label for="dayInput">Día actual</label><input id="dayInput" name="day" type="number" min="1" max="300" step="1" required></div>
+      </div>
+      <p class="demo-note">Los indicadores, alertas, forecast y análisis se recalculan automáticamente. Las curvas históricas conservan su forma y ajustan el punto del corte.</p>
+      <div class="dialog-actions"><button type="button" class="ghost-btn" id="cancelDialog">Cancelar</button><button class="primary-btn" type="submit">Aplicar actualización</button></div>
+    </div>
+  </form>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+<script>
+(() => {
+  "use strict";
+  const snapshot={bac:25000000,pv:15200000,ev:14800000,ac:16300000,physical:60,day:180,duration:300};
+  const disciplines=[
+    {name:"Arquitectura",owner:"Lucía Torres",bac:4000000,plan:72,real:68,ev:2720000,ac:3000000,status:"Retrasada"},
+    {name:"Estructuras",owner:"Carlos Rivas",bac:7500000,plan:86,real:84,ev:6300000,ac:6750000,status:"En riesgo"},
+    {name:"Sanitarias",owner:"Miguel Paredes",bac:3000000,plan:55,real:52,ev:1560000,ac:1730000,status:"Retrasada"},
+    {name:"Eléctricas",owner:"Ana Salazar",bac:3500000,plan:50,real:47,ev:1645000,ac:1850000,status:"Retrasada"},
+    {name:"Mecánicas",owner:"Diego Chávez",bac:4000000,plan:45,real:43,ev:1720000,ac:2000000,status:"Crítica"},
+    {name:"Obras exteriores",owner:"María Peña",bac:3000000,plan:22.3333333333,real:28.5,ev:855000,ac:970000,status:"Adelantada"}
+  ];
+  const activities=[
+    {id:"A01",name:"Movilización y obras provisionales",discipline:"Obras exteriores",owner:"María Peña",start:0,end:18,progress:100,status:"Completada"},
+    {id:"A02",name:"Excavación masiva",discipline:"Estructuras",owner:"Carlos Rivas",start:10,end:45,progress:100,status:"Completada"},
+    {id:"A03",name:"Cimentaciones y sótanos",discipline:"Estructuras",owner:"Carlos Rivas",start:35,end:105,progress:100,status:"Completada"},
+    {id:"A04",name:"Superestructura de concreto",discipline:"Estructuras",owner:"Carlos Rivas",start:75,end:190,progress:84,status:"En riesgo"},
+    {id:"A05",name:"Fachada y envolvente",discipline:"Arquitectura",owner:"Lucía Torres",start:145,end:245,progress:32,status:"Retrasada"},
+    {id:"A06",name:"Albañilería y acabados",discipline:"Arquitectura",owner:"Lucía Torres",start:125,end:270,progress:51,status:"Retrasada"},
+    {id:"A07",name:"Redes sanitarias",discipline:"Sanitarias",owner:"Miguel Paredes",start:110,end:248,progress:52,status:"Retrasada"},
+    {id:"A08",name:"Instalaciones eléctricas",discipline:"Eléctricas",owner:"Ana Salazar",start:118,end:260,progress:47,status:"Retrasada"},
+    {id:"A09",name:"HVAC y ventilación",discipline:"Mecánicas",owner:"Diego Chávez",start:132,end:270,progress:43,status:"Crítica"},
+    {id:"A10",name:"Coordinación BIM federada",discipline:"Mecánicas",owner:"Sofía Campos",start:30,end:255,progress:69,status:"En riesgo"},
+    {id:"A11",name:"Paisajismo y exteriores",discipline:"Obras exteriores",owner:"María Peña",start:225,end:286,progress:8,status:"En plazo"},
+    {id:"A12",name:"Pruebas y commissioning",discipline:"Mecánicas",owner:"Diego Chávez",start:255,end:297,progress:0,status:"En plazo"},
+    {id:"A13",name:"Cierre y entrega",discipline:"Arquitectura",owner:"Lucía Torres",start:285,end:300,progress:0,status:"En plazo"}
+  ];
+  const risks=[
+    {id:"R-01",name:"Retraso de equipos HVAC importados",p:4,i:5,owner:"Diego Chávez",response:"Compra expeditada y alternativa local",status:"En mitigación"},
+    {id:"R-02",name:"Reprocesos por cambios de arquitectura",p:4,i:4,owner:"Lucía Torres",response:"Congelar diseño por zonas y RFI prioritaria",status:"Crítico"},
+    {id:"R-03",name:"Baja productividad en acabados",p:4,i:3,owner:"Lucía Torres",response:"Segundo turno y balance de cuadrillas",status:"En mitigación"},
+    {id:"R-04",name:"Interferencias MEP sobre cielo raso",p:3,i:4,owner:"Sofía Campos",response:"Big Room diario y cierre por zonas",status:"Abierto"},
+    {id:"R-05",name:"Accidente con tiempo perdido",p:2,i:5,owner:"Jorge León",response:"Controles críticos y supervisión de izaje",status:"Controlado"},
+    {id:"R-06",name:"Volatilidad de cobre",p:3,i:3,owner:"Ana Salazar",response:"Cierre de compra y reserva contractual",status:"Monitoreo"}
+  ];
+  const clashes=[
+    {id:"BIM-142",name:"Ducto HVAC cruza viga postensada",disc:"Mecánicas / Estructuras",severity:"Crítica",owner:"Sofía Campos",due:"05 jul",status:"Abierto"},
+    {id:"BIM-137",name:"Bandeja eléctrica invade rociadores",disc:"Eléctricas / Sanitarias",severity:"Alta",owner:"Ana Salazar",due:"04 jul",status:"Vencido"},
+    {id:"BIM-131",name:"Montante sanitario fuera de shaft",disc:"Sanitarias / Arquitectura",severity:"Alta",owner:"Miguel Paredes",due:"07 jul",status:"En revisión"},
+    {id:"BIM-128",name:"Altura libre insuficiente en lobby",disc:"Mecánicas / Arquitectura",severity:"Crítica",owner:"Lucía Torres",due:"03 jul",status:"Vencido"},
+    {id:"BIM-119",name:"Registro sin acceso de mantenimiento",disc:"Mecánicas",severity:"Media",owner:"Diego Chávez",due:"10 jul",status:"Asignado"}
+  ];
+  const actions=[
+    ["Recuperar HVAC","Cerrar compra de equipos críticos y aprobar proveedor alterno en 48 h.","Diego · 05 jul"],
+    ["Contener costo de acabados","Rebaselinar rendimientos por frente y aprobar segundo turno condicionado.","Lucía · 06 jul"],
+    ["Cerrar interferencias críticas","Big Room diario por nivel; liberar zonas 8–10 antes de instalación.","Sofía · 04 jul"],
+    ["Proteger forecast","Congelar cambios sin impacto aprobado y revisar compromisos de compra.","PMO · 08 jul"]
+  ];
+  const state={snapshot,view:"summary",filters:{discipline:"all",owner:"all",status:"all",period:"all"},charts:{}};
+  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const money=v=>`${v<0?"−":""}$${Math.abs(v/1e6).toFixed(2)} M`;
+  const pct=v=>`${Number(v).toFixed(1)}%`;
+  const evm=s=>{
+    const cv=s.ev-s.ac,sv=s.ev-s.pv,cpi=s.ac?s.ev/s.ac:0,spi=s.pv?s.ev/s.pv:0;
+    const eac=cpi?s.bac/cpi:0,etc=eac-s.ac,vac=s.bac-eac,tcpi=(s.bac-s.ac)?(s.bac-s.ev)/(s.bac-s.ac):0;
+    return {...s,cv,sv,cpi,spi,eac,etc,vac,tcpi};
+  };
+  function distributeCapped(total,weights,caps){
+    const result=weights.map(()=>0);let remaining=total,active=weights.map((_,i)=>i);
+    while(remaining>.01&&active.length){
+      const weightSum=active.reduce((s,i)=>s+Math.max(0,weights[i]),0)||active.length;
+      const capped=active.filter(i=>remaining*(Math.max(0,weights[i])||1)/weightSum>caps[i]-result[i]+.01);
+      if(!capped.length){active.forEach(i=>result[i]+=remaining*(Math.max(0,weights[i])||1)/weightSum);remaining=0;break}
+      capped.forEach(i=>{const room=Math.max(0,caps[i]-result[i]);result[i]+=room;remaining-=room});
+      active=active.filter(i=>!capped.includes(i));
+    }
+    return result;
+  }
+  const indexState=v=>v>=1?"ok":v>=.95?"warn":"bad";
+  const varianceState=(v,bac)=>v>=0?"ok":Math.abs(v)/bac<=.02?"warn":"bad";
+  const statusClass=s=>["Crítica","Retrasada","Vencido","Crítico"].includes(s)?"bad":["En riesgo","En mitigación","Abierto","Alta","Media","Monitoreo"].includes(s)?"warn":"ok";
+  const badge=s=>`<span class="badge ${statusClass(s)}">● ${s}</span>`;
+  const kpiData=()=>{
+    const m=evm(state.snapshot);
+    return [
+      ["BAC",money(m.bac),"Presupuesto aprobado","info"],["PV",money(m.pv),`${pct(m.pv/m.bac*100)} planificado`,"info"],
+      ["EV",money(m.ev),`${pct(m.ev/m.bac*100)} ganado`,"info"],["AC",money(m.ac),`${pct(m.ac/m.bac*100)} consumido`,varianceState(m.ev-m.ac,m.bac)],
+      ["CV",money(m.cv),m.cv<0?"Sobrecosto acumulado":"Bajo presupuesto",varianceState(m.cv,m.bac)],["SV",money(m.sv),m.sv<0?"Retraso valorizado":"Adelanto valorizado",varianceState(m.sv,m.bac)],
+      ["CPI",m.cpi.toFixed(3),m.cpi<1?"Ineficiencia de costo":"Costo eficiente",indexState(m.cpi)],["SPI",m.spi.toFixed(3),m.spi<1?"Ritmo bajo plan":"Ritmo conforme",indexState(m.spi)],
+      ["EAC",money(m.eac),`+${money(Math.max(0,m.eac-m.bac))} vs BAC`,varianceState(m.vac,m.bac)],["ETC",money(m.etc),"Costo estimado pendiente","info"],
+      ["VAC",money(m.vac),m.vac<0?"Déficit al cierre":"Ahorro previsto",varianceState(m.vac,m.bac)],["TCPI",m.tcpi.toFixed(3),"Eficiencia requerida al cierre",m.tcpi>1.1?"bad":m.tcpi>1?"warn":"ok"]
+    ];
+  };
+  function renderKpis(target,data=kpiData()){
+    $(target).innerHTML=data.map(([l,v,n,s])=>`<article class="kpi" data-state="${s}" title="${n}"><div class="kpi-top"><span class="kpi-label">${l}</span><i class="traffic"></i></div><div class="kpi-value">${v}</div><div class="kpi-note">${n}</div></article>`).join("");
+  }
+  function filteredDisciplines(){
+    return disciplines.filter(d=>(state.filters.discipline==="all"||d.name===state.filters.discipline)&&(state.filters.owner==="all"||d.owner===state.filters.owner)&&(state.filters.status==="all"||d.status===state.filters.status));
+  }
+  function renderDisciplines(){
+    const rows=filteredDisciplines();
+    $("#disciplineRows").innerHTML=rows.map(d=>`<tr><td><span class="discipline-name">${d.name}</span><span class="sub">${d.owner}</span></td><td>${money(d.bac)}</td><td><div class="bar"><span style="width:${d.plan}%"></span></div><span class="sub">${pct(d.plan)}</span></td><td><div class="bar real"><span style="width:${d.real}%"></span></div><span class="sub">${pct(d.real)}</span></td><td>${money(d.ev)}</td><td>${money(d.ac)}</td><td>${(d.ev/d.ac).toFixed(3)}</td><td>${badge(d.status)}</td></tr>`).join("");
+    $("#disciplineEmpty").style.display=rows.length?"none":"block";
+    $("#scopeBadge").textContent=rows.length===disciplines.length?"Vista global":`Vista filtrada · ${rows.length} disciplina${rows.length===1?"":"s"}`;
+  }
+  function filteredActivities(){
+    return activities.filter(a=>{
+      const byD=state.filters.discipline==="all"||a.discipline===state.filters.discipline;
+      const byO=state.filters.owner==="all"||a.owner===state.filters.owner;
+      const byS=state.filters.status==="all"||a.status===state.filters.status;
+      let byP=true;
+      if(state.filters.period==="7") byP=a.start>=state.snapshot.day&&a.start<=state.snapshot.day+7;
+      if(state.filters.period==="30") byP=a.start>=state.snapshot.day&&a.start<=state.snapshot.day+30;
+      if(state.filters.period==="late") byP=["Retrasada","Crítica","En riesgo"].includes(a.status)&&a.start<=state.snapshot.day;
+      return byD&&byO&&byS&&byP;
+    });
+  }
+  function renderActivities(){
+    const rows=filteredActivities();
+    $("#activityRows").innerHTML=rows.map(a=>{
+      const left=a.start/state.snapshot.duration*100,width=(a.end-a.start)/state.snapshot.duration*100;
+      const cls=a.status==="Completada"?"done":["Retrasada","Crítica"].includes(a.status)?"late":"";
+      return `<tr><td><strong>${a.id}</strong> · ${a.name}</td><td>${a.discipline}</td><td>${a.owner}</td><td>D${a.start}—D${a.end}</td><td>${a.progress}%</td><td>${badge(a.status)}</td><td class="gantt-cell"><div class="gantt-track"><span class="gantt-bar ${cls}" title="${a.name}: ${a.progress}%" style="left:${left}%;width:${width}%"></span></div></td></tr>`;
+    }).join("");
+    $("#activityEmpty").style.display=rows.length?"none":"block";
+    const late=activities.filter(a=>["Retrasada","Crítica"].includes(a.status)).length;
+    $("#lateBadge").textContent=`${late} retrasadas/críticas`;
+  }
+  function buildAlerts(){
+    const m=evm(state.snapshot),late=activities.filter(a=>["Retrasada","Crítica"].includes(a.status)).length,critical=risks.filter(r=>r.p*r.i>=15).length;
+    const list=[];
+    if(m.cpi<1)list.push([indexState(m.cpi),"Eficiencia de costo bajo objetivo",`CPI ${m.cpi.toFixed(3)} · por cada USD 1.00 invertido se generan USD ${m.cpi.toFixed(2)} de valor.`,"PMO · revisión 05 jul"]);
+    if(m.cv<0)list.push(["bad","Sobrecosto acumulado",`${money(m.cv)} de CV; el AC excede el valor ganado.`,"Costos · plan 06 jul"]);
+    if(m.spi<1)list.push(["warn","Ritmo de avance bajo baseline",`SPI ${m.spi.toFixed(3)} y SV ${money(m.sv)}.`,"Planning · corte semanal"]);
+    if(m.eac>m.bac)list.push(["bad","Forecast excede el BAC",`EAC ${money(m.eac)} · déficit previsto ${money(Math.abs(m.vac))}.`,"Director de proyecto · 08 jul"]);
+    if(late)list.push(["warn",`${late} actividades con desviación`,`HVAC, acabados y frentes MEP requieren recuperación.`,"Producción · lookahead"]);
+    if(critical)list.push(["bad",`${critical} riesgos críticos`,`Equipos HVAC y cambios de arquitectura concentran exposición.`,"Risk owner · 48 h"]);
+    return list.slice(0,5);
+  }
+  function renderAlerts(){
+    const a=buildAlerts();$("#alertCount").textContent=`${a.length} activas`;
+    $("#alertsList").innerHTML=a.map(([c,t,p,f])=>`<div class="alert ${c}"><div class="alert-top"><strong>${t}</strong>${badge(c==="bad"?"Crítica":"Atención")}</div><p>${p}</p><small>${f}</small></div>`).join("");
+  }
+  function renderExecutive(){
+    const m=evm(state.snapshot),over=m.eac-m.bac,days=Math.round((1-m.spi)*state.snapshot.duration);
+    $("#executiveText").innerHTML=`El proyecto registra un <strong>avance físico de ${pct(m.physical)}</strong> frente a un avance ganado de ${pct(m.ev/m.bac*100)}. El <strong>SPI ${m.spi.toFixed(3)}</strong> confirma un retraso leve, equivalente a aproximadamente ${days} días de presión sobre el plan, mientras el <strong>CPI ${m.cpi.toFixed(3)}</strong> evidencia una desviación de costo material. Si la eficiencia actual continúa, el cierre se proyecta en <strong>${money(m.eac)}</strong>, ${money(over)} por encima del BAC. Para terminar dentro del presupuesto se requiere un TCPI de <strong>${m.tcpi.toFixed(3)}</strong>, exigente frente al desempeño actual. La prioridad es contener cambios, recuperar productividad de acabados y HVAC, y cerrar interferencias BIM críticas antes de liberar nuevos frentes. Estas acciones deben validarse con responsables y evidencia en el próximo corte.`;
+  }
+  function renderActions(){
+    $("#actionList").innerHTML=actions.map((a,i)=>`<div class="action"><span class="action-num">${i+1}</span><div><p>${a[0]}</p><small>${a[1]}</small></div><span class="badge info">${a[2]}</span></div>`).join("");
+    const m=evm(state.snapshot);
+    $("#forecastList").innerHTML=[
+      ["EAC probable",`${money(m.eac)} manteniendo CPI ${m.cpi.toFixed(3)}`],
+      ["Déficit previsto",`${money(Math.abs(m.vac))} respecto al BAC aprobado`],
+      ["Costo pendiente",`${money(m.etc)} para completar el alcance`],
+      ["Eficiencia requerida",`TCPI ${m.tcpi.toFixed(3)} para sostener el BAC`]
+    ].map((a,i)=>`<div class="action"><span class="action-num">${i+1}</span><div><p>${a[0]}</p><small>${a[1]}</small></div></div>`).join("");
+  }
+  function renderRisks(){
+    $("#riskRows").innerHTML=risks.map(r=>`<tr><td><strong>${r.id}</strong></td><td>${r.name}</td><td>${r.p}</td><td>${r.i}</td><td>${r.p*r.i}</td><td>${r.owner}</td><td>${r.response}</td><td>${badge(r.status)}</td></tr>`).join("");
+    $("#riskMatrix").innerHTML=Array.from({length:25},(_,idx)=>{const p=5-Math.floor(idx/5),i=idx%5+1,v=p*i,c=v>=15?"high":v>=8?"med":"";const count=risks.filter(r=>r.p===p&&r.i===i).length;return `<div class="risk-cell ${c}" title="P${p} × I${i}${count?` · ${count} riesgo(s)`:""}">${count||`${p}×${i}`}</div>`}).join("");
+  }
+  function renderBim(){
+    $("#bimRows").innerHTML=clashes.map(c=>`<tr><td><strong>${c.id}</strong></td><td>${c.name}</td><td>${c.disc}</td><td>${badge(c.severity)}</td><td>${c.owner}</td><td>${c.due}</td><td>${badge(c.status)}</td></tr>`).join("");
+  }
+  function initSelects(){
+    [...new Set(disciplines.map(d=>d.name))].forEach(v=>$("#disciplineFilter").add(new Option(v,v)));
+    [...new Set([...disciplines.map(d=>d.owner),...activities.map(a=>a.owner)])].sort().forEach(v=>$("#ownerFilter").add(new Option(v,v)));
+  }
+  const curve={labels:[0,30,60,90,120,150,180,210,240,270,300],pv:[0,.6,1.9,4.2,7.7,11.3,15.2,18.7,21.5,23.7,25],ev:[0,.55,1.8,4,7.35,10.85,14.8,18.05,20.9,23.15,24.5],ac:[0,.58,2,4.45,8.1,12.1,16.3,19.5,22.2,24.9,27.53]};
+  function currentCurve(){
+    const bacScale=state.snapshot.bac/25000000,eacScale=evm(state.snapshot).eac/27530000;
+    const data={labels:[...curve.labels],pv:curve.pv.map(v=>v*bacScale),ev:curve.ev.map(v=>v*bacScale),ac:curve.ac.map(v=>v*eacScale)},day=state.snapshot.day;
+    let idx=data.labels.indexOf(day);
+    if(idx<0){idx=data.labels.findIndex(v=>v>day);if(idx<0)idx=data.labels.length;data.labels.splice(idx,0,day);data.pv.splice(idx,0,0);data.ev.splice(idx,0,0);data.ac.splice(idx,0,0)}
+    data.pv[idx]=state.snapshot.pv/1e6;data.ev[idx]=state.snapshot.ev/1e6;data.ac[idx]=state.snapshot.ac/1e6;
+    return data;
+  }
+  function themeColors(){const cs=getComputedStyle(document.documentElement);return{accent:cs.getPropertyValue("--accent").trim(),ok:cs.getPropertyValue("--ok").trim(),bad:cs.getPropertyValue("--bad").trim(),muted:cs.getPropertyValue("--muted").trim(),line:cs.getPropertyValue("--line").trim(),surface:cs.getPropertyValue("--surface").trim()}}
+  function chartDefaults(){
+    const c=themeColors();Chart.defaults.color=c.muted;Chart.defaults.borderColor=c.line;Chart.defaults.font.family='Inter, system-ui, sans-serif';
+    return c;
+  }
+  function initCharts(){
+    if(typeof Chart==="undefined"){$("#sCurve").style.display="none";$("#chartError").style.display="grid";return}
+    const c=chartDefaults(),cd=currentCurve(),common={responsive:true,maintainAspectRatio:false,animation:{duration:500},interaction:{mode:"index",intersect:false},plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8,padding:18}},tooltip:{backgroundColor:c.surface,titleColor:getComputedStyle(document.documentElement).getPropertyValue("--text"),bodyColor:c.muted,borderColor:c.line,borderWidth:1,padding:12,callbacks:{label:x=>`${x.dataset.label}: $${Number(x.raw).toFixed(2)} M`}}},scales:{x:{grid:{display:false},title:{display:true,text:"Día del proyecto"}},y:{beginAtZero:true,grid:{color:c.line},ticks:{callback:v=>`$${v}M`}}}};
+    state.charts.s=new Chart($("#sCurve"),{type:"line",data:{labels:cd.labels,datasets:[{label:"PV · Plan",data:cd.pv,borderColor:c.accent,backgroundColor:c.accent,tension:.35,pointRadius:3,borderWidth:2.5},{label:"EV · Ganado",data:cd.ev,borderColor:c.ok,backgroundColor:c.ok,tension:.35,pointRadius:3,borderWidth:2.5},{label:"AC · Real",data:cd.ac,borderColor:c.bad,backgroundColor:c.bad,tension:.35,pointRadius:3,borderWidth:2.5}]},options:common});
+    state.charts.cost=new Chart($("#costChart"),{type:"bar",data:{labels:disciplines.map(d=>d.name),datasets:[{label:"Variación CV",data:disciplines.map(d=>(d.ev-d.ac)/1e6),backgroundColor:disciplines.map(d=>d.ev-d.ac<0?c.bad:c.ok),borderRadius:6}]},options:{...common,plugins:{...common.plugins,legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:c.line},ticks:{callback:v=>`$${v}M`}}}}});
+    state.charts.bim=new Chart($("#bimChart"),{type:"doughnut",data:{labels:["Críticas","Altas","Medias","Bajas"],datasets:[{data:[9,13,11,5],backgroundColor:[c.bad,"#e59b3c",c.accent,c.ok],borderColor:c.surface,borderWidth:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:"68%",plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8,padding:18}}}}});
+  }
+  function refreshCharts(){
+    if(!state.charts.s)return;
+    Object.values(state.charts).forEach(ch=>ch.destroy());state.charts={};initCharts();
+  }
+  function renderTop(){
+    const m=evm(state.snapshot);
+    $("#physicalTop").textContent=pct(m.physical);$("#financialTop").textContent=pct(m.ac/m.bac*100);$("#forecastTop").textContent=money(m.eac);
+    $("#dayLabel").textContent=`Día ${m.day}`;$("#durationLabel").textContent=`${pct(m.day/m.duration*100)} del plazo`;$("#timeProgress").style.width=`${Math.min(100,m.day/m.duration*100)}%`;$("#spiSchedule").textContent=m.spi.toFixed(3);
+    $("#curveSubtitle").textContent=`Punto de corte · día actual ${m.day}`;
+    const severe=m.cpi<.95||m.spi<.95,healthy=m.cpi>=1&&m.spi>=1;
+    $("#generalState").textContent=healthy?"Desempeño controlado":severe?"Intervención inmediata":"Intervención requerida";
+    $("#generalPill").className=`status-pill ${healthy?"ok":severe?"bad":"warn"}`;
+    $("#generalPill").textContent=healthy?"● Costo y plazo controlados":`● ${m.spi<1?"Retraso":"Plazo estable"} · ${m.cpi<1?"Sobrecosto":"Costo estable"}`;
+  }
+  function renderUpcoming(){
+    const upcoming=activities.filter(a=>a.start>=state.snapshot.day&&a.start<=state.snapshot.day+30)
+      .filter(a=>(state.filters.discipline==="all"||a.discipline===state.filters.discipline)&&(state.filters.owner==="all"||a.owner===state.filters.owner)&&(state.filters.status==="all"||a.status===state.filters.status)).slice(0,5);
+    $("#upcomingList").innerHTML=upcoming.length?upcoming.map((a,i)=>`<div class="action"><span class="action-num">${i+1}</span><div><p>${a.name}</p><small>${a.owner} · inicia día ${a.start}</small></div>${badge(a.status)}</div>`).join(""):`<div class="empty" style="display:block">No hay inicios próximos en esta ventana.</div>`;
+  }
+  function render(){
+    renderTop();renderKpis("#kpiGrid");renderKpis("#costKpis",kpiData().slice(4));renderDisciplines();renderActivities();renderAlerts();renderExecutive();renderActions();renderRisks();renderBim();renderUpcoming();
+  }
+  function changeView(id){
+    state.view=id;$$(".view").forEach(v=>v.classList.toggle("active",v.id===id));$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));window.scrollTo({top:0,behavior:"smooth"});
+    setTimeout(()=>Object.values(state.charts).forEach(c=>c.resize()),50);
+  }
+  initSelects();render();initCharts();
+  $$(".nav button").forEach(b=>b.addEventListener("click",()=>changeView(b.dataset.view)));
+  ["discipline","owner","status","period"].forEach(k=>$("#"+k+"Filter").addEventListener("change",e=>{state.filters[k]=e.target.value;renderDisciplines();renderActivities();renderUpcoming()}));
+  $("#filterForm").addEventListener("submit",e=>e.preventDefault());
+  $("#resetFilters").addEventListener("click",()=>{Object.keys(state.filters).forEach(k=>{state.filters[k]="all";$("#"+k+"Filter").value="all"});renderDisciplines();renderActivities();renderUpcoming()});
+  $("#themeBtn").addEventListener("click",()=>{const t=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=t;localStorage.setItem("pc-theme",t);refreshCharts()});
+  $("#printBtn").addEventListener("click",()=>window.print());
+  const dialog=$("#editDialog");
+  $("#editBtn").addEventListener("click",()=>{Object.entries(state.snapshot).forEach(([k,v])=>{const el=$("#"+k+"Input");if(el)el.value=v});dialog.showModal()});
+  $("#closeDialog").addEventListener("click",()=>dialog.close());$("#cancelDialog").addEventListener("click",()=>dialog.close());
+  dialog.addEventListener("click",e=>{if(e.target===dialog)dialog.close()});
+  $("#editForm").addEventListener("submit",e=>{
+    e.preventDefault();const fd=new FormData(e.currentTarget),next={};["bac","pv","ev","ac","physical","day"].forEach(k=>next[k]=Number(fd.get(k)));
+    if(next.ev>next.bac){$("#evInput").setCustomValidity("El EV no puede superar el BAC.");$("#evInput").reportValidity();return}
+    $("#evInput").setCustomValidity("");
+    if(next.pv>next.bac){$("#pvInput").setCustomValidity("El PV acumulado no puede superar el BAC.");$("#pvInput").reportValidity();return}
+    $("#pvInput").setCustomValidity("");
+    const old={...state.snapshot},bacShares=disciplines.map(d=>d.bac/old.bac),newBacs=bacShares.map(s=>next.bac*s);
+    const planValues=distributeCapped(next.pv,disciplines.map(d=>d.bac*d.plan/100),newBacs);
+    const earnedValues=distributeCapped(next.ev,disciplines.map(d=>d.ev),newBacs);
+    const costShares=disciplines.map(d=>old.ac?d.ac/old.ac:d.bac/old.bac);
+    disciplines.forEach((d,i)=>{
+      d.bac=newBacs[i];d.ev=earnedValues[i];d.ac=next.ac*costShares[i];
+      d.plan=planValues[i]/d.bac*100;d.real=d.ev/d.bac*100;
+    });
+    Object.assign(state.snapshot,next);render();refreshCharts();dialog.close()
+  });
+})();
+</script>
+</body>
+</html>
